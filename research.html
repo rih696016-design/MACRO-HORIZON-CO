@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research & Education · Macro Horizon Co</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #05080f; --border: rgba(255, 255, 255, 0.09); --text: #e9eefb;
+            --muted: #8b9bb4; --gold: #d9b25f; --gold-2: #f3dda3; --teal: #38e0c0;
+            --blue: #4aa8ff; --violet: #7d7bf5; --radius: 18px; --max: 1100px;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4 { font-family: 'Sora', sans-serif; letter-spacing: -0.02em; }
+        #bg-canvas { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+        .noise { position: fixed; inset: 0; z-index: -1; opacity: .026; mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        .container { max-width: var(--max); margin: 0 auto; padding: 2rem 2rem 4rem; position: relative; z-index: 10; }
+        
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 3rem; flex-wrap: wrap; }
+        .logo { font-family: 'Sora', sans-serif; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: var(--gold); }
+        .logo span { font-weight: 300; color: var(--muted); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+        h1 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1rem; line-height: 1.1; }
+        .accent-glow { color: var(--teal); text-shadow: 0 0 20px rgba(56, 224, 192, 0.4); font-weight: 400; }
+        .intro-text { font-size: 1.15rem; color: var(--muted); max-width: 800px; margin-bottom: 3rem; border-left: 3px solid var(--teal); padding-left: 1.5rem; }
+
+        .research-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
+        .research-card {
+            background: linear-gradient(160deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+            border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem;
+            transition: 0.3s;
+        }
+        .research-card:hover { border-color: rgba(74, 168, 255, 0.4); transform: translateY(-3px); }
+        .research-tag { display: inline-block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; background: rgba(74, 168, 255, 0.1); color: var(--blue); border: 1px solid rgba(74, 168, 255, 0.2); margin-bottom: 1rem; }
+        .research-card h3 { font-size: 1.3rem; margin-bottom: 0.8rem; }
+        .research-card p { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .research-meta { display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 1rem; font-size: 0.8rem; color: var(--muted); }
+
+        .detail-section { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius); padding: 3rem; margin-bottom: 3rem; }
+        .detail-section h2 { font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--text); display: flex; gap: 12px; align-items: center; }
+        .detail-section h2 i { color: var(--gold); }
+        .detail-list { list-style: none; }
+        .detail-list li { margin-bottom: 1.5rem; padding-left: 2rem; position: relative; }
+        .detail-list li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--teal); position: absolute; left: 0; top: 4px; }
+        .detail-list h4 { font-size: 1.1rem; margin-bottom: 0.3rem; color: var(--gold-2); }
+        .detail-list p { color: var(--muted); font-size: 0.95rem; }
+
+        @media (max-width: 768px) {
+            .research-grid { grid-template-columns: 1fr; }
+            .top-nav { flex-direction: column; gap: 1rem; align-items: flex-start; }
+            .detail-section { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="noise"></div>
+
+    <div class="container">
+        <div class="top-nav">
+            <div class="logo"><i class="fas fa-globe-americas"></i> MACRO<span>HORIZON CO</span></div>
+            <div class="nav-links">
+                <a href="strategy.html">Strategy</a>
+                <a href="research.html" class="active">Research</a>
+                <a href="market.html">Markets</a>
+                <a href="team.html">Team</a>
+            </div>
+        </div>
+
+        <h1>Research & <span class="accent-glow">Education</span></h1>
+        <p class="intro-text">
+            We believe that an informed investor is a successful investor. Our research library provides deep dives into macroeconomic trends, specific asset classes, and the fundamental principles of responsible wealth building.
+        </p>
+
+        <div class="research-grid">
+            <div class="research-card">
+                <span class="research-tag">Macro Outlook</span>
+                <h3>The End of the Zero-Rate Era: Navigating Higher Term Premiums</h3>
+                <p>An in-depth analysis of the shifting global interest rate landscape, focusing on the repricing of long-duration sovereign debt and the implications for equity multiples across developed markets.</p>
+                <div class="research-meta"><span><i class="fas fa-user"></i> Dr. Elena Rostova</span><span><i class="fas fa-clock"></i> 1 min read</span></div>
+            </div>
+            <div class="research-card">
+                <span class="research-tag">Geopolitics</span>
+                <h3>Supply Chain Fragmentation: The New Geography of Trade</h3>
+                <p>How the realignment of global supply chains away from single-source dependencies is creating structural inflationary pressures and new opportunities in domestic infrastructure.</p>
+                <div class="research-meta"><span><i class="fas fa-user"></i> Marcus Thorne</span><span><i class="fas fa-clock"></i> 1 min read</span></div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h2><i class="fas fa-book-open"></i> Investment Opportunities Explained</h2>
+            <ul class="detail-list">
+                <li>
+                    <h4>1. US Large Cap Equity</h4>
+                    <p>Large-cap equities represent established, financially stable American companies. Investing in this sector provides exposure to the core of the US economy. While generally less volatile than small-caps, they are still subject to market corrections.</p>
+                </li>
+                <li>
+                    <h4>2. Apple and Tesla (Individual Stocks)</h4>
+                    <p>Investing in specific companies like Apple or Tesla offers the potential for high growth, but comes with idiosyncratic risk. A single company's earnings report, product delay, or leadership change can cause significant stock price fluctuation.</p>
+                </li>
+                <li>
+                    <h4>3. International Equity</h4>
+                    <p>Diversifying outside the US protects against domestic economic downturns. International equities include developed markets (Europe, Japan) and emerging markets (India, Brazil). These carry additional risks such as currency fluctuation and geopolitical instability.</p>
+                </li>
+                <li>
+                    <h4>4. Cash & Equivalents</h4>
+                    <p>Cash and cash equivalents (like Treasury bills or money market funds) are crucial for liquidity. They provide a safety net for emergencies and short-term goals, preserving capital even if they historically offer lower returns than equities.</p>
+                </li>
+                <li>
+                    <h4>5. Investment Grade Credit</h4>
+                    <p>These are bonds issued by highly rated corporations or governments. They provide regular interest income and are generally lower risk than stocks, making them a core component of capital preservation strategies.</p>
+                </li>
+                <li>
+                    <h4>6. Sustainable Infrastructure</h4>
+                    <p>Investing in infrastructure (energy grids, utilities, transportation) offers inflation-linked cash flows. The shift towards sustainable development creates long-term growth potential in renewable energy and green utilities.</p>
+                </li>
+                <li>
+                    <h4>7. Private Credit Fund IV</h4>
+                    <p>Private credit involves lending directly to middle-market businesses. It can offer high yields but comes with significant liquidity risk (your money is locked up), credit risk (the borrower might default), and complex fee structures.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Standard animated background script (Same as Strategy page)
+        (function() {
+            var cv = document.getElementById('bg-canvas');
+            var ctx = cv.getContext('2d', { alpha: false });
+            var W, H, particles = [];
+            var blobs = [
+                { x: .85, y: .15, r: .6, c: '56,224,192', a: .08, sx: .0001, sy: .00013, ph: 0 },
+                { x: .2, y: .8, r: .5, c: '74,168,255', a: .05, sx: .00012, sy: .00008, ph: 1.7 }
+            ];
+            function resize() {
+                W = window.innerWidth; H = window.innerHeight;
+                cv.width = W; cv.height = H;
+                particles = Array.from({length: 40}, () => ({
+                    x: Math.random() * W, y: Math.random() * H, vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3, r: Math.random()*1.5
+                }));
+            }
+            function draw(t) {
+                ctx.fillStyle = '#05080f'; ctx.fillRect(0, 0, W, H);
+                ctx.globalCompositeOperation = 'lighter';
+                blobs.forEach(b => {
+                    var bx = (b.x + Math.sin(t * b.sx) * .05) * W, by = (b.y + Math.cos(t * b.sy) * .05) * H;
+                    var br = b.r * Math.max(W,H) * .6;
+                    var g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+                    g.addColorStop(0, `rgba(${b.c},${b.a})`); g.addColorStop(1, `rgba(${b.c},0)`);
+                    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(bx, by, br, 0, 6.28); ctx.fill();
+                });
+                particles.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+                    ctx.fillStyle = 'rgba(210,228,255,0.3)'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.28); ctx.fill();
+                });
+                ctx.globalCompositeOperation = 'source-over';
+                requestAnimationFrame(draw);
+            }
+            resize(); window.addEventListener('resize', resize); requestAnimationFrame(draw);
+        })();
+    </script>
+</body>
+</html>

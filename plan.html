@@ -1,0 +1,2412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Macro Horizon Investment — global macro asset management, systematic equity, private credit and sustainable infrastructure strategies." />
+<title>Macro Horizon Investment — Invest Beyond the Horizon</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   0. TOKENS
+   ============================================================ */
+:root{
+  --bg:#05080f;
+  --bg-soft:#080d18;
+  --surface:rgba(255,255,255,.035);
+  --surface-2:rgba(255,255,255,.055);
+  --border:rgba(255,255,255,.09);
+  --border-strong:rgba(255,255,255,.16);
+  --text:#e9eefb;
+  --muted:#8b9bb4;
+  --muted-2:#647389;
+  --gold:#d9b25f;
+  --gold-2:#f3dda3;
+  --teal:#38e0c0;
+  --violet:#7d7bf5;
+  --up:#3ddc97;
+  --down:#ff6b7a;
+  --radius:18px;
+  --radius-sm:12px;
+  --max:1200px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+
+html{
+  background:var(--bg);
+  scroll-behavior:smooth;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  margin:0;
+  background:transparent;
+  color:var(--text);
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  font-size:16px;
+  line-height:1.65;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+h1,h2,h3,h4{
+  font-family:'Sora',system-ui,sans-serif;
+  font-weight:600;
+  line-height:1.15;
+  letter-spacing:-.02em;
+  margin:0;
+}
+
+p{margin:0;}
+a{color:inherit;text-decoration:none;}
+img{max-width:100%;display:block;}
+button,input,select,textarea{font:inherit;color:inherit;}
+
+::selection{background:rgba(217,178,95,.3);color:#fff;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:#05080f;}
+::-webkit-scrollbar-thumb{background:#1c2635;border-radius:20px;border:2px solid #05080f;}
+::-webkit-scrollbar-thumb:hover{background:#2b394d;}
+
+/* ============================================================
+   1. BACKGROUND LAYERS
+   ============================================================ */
+#bg-canvas{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  display:block;
+  pointer-events:none;
+}
+
+.noise{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.028;
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.page{
+  position:relative;
+  z-index:1;
+}
+
+/* Scroll progress */
+.progress-bar{
+  position:fixed;
+  top:0;left:0;
+  height:2px;
+  width:0%;
+  z-index:200;
+  background:linear-gradient(90deg,var(--teal),var(--gold));
+  box-shadow:0 0 14px rgba(217,178,95,.6);
+  transition:width .1s linear;
+}
+
+/* ============================================================
+   2. LAYOUT HELPERS
+   ============================================================ */
+.wrap{
+  width:100%;
+  max-width:var(--max);
+  margin:0 auto;
+  padding:0 28px;
+}
+
+section{position:relative;padding:110px 0;}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:22px;
+}
+.eyebrow::before{
+  content:'';
+  width:26px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold));
+}
+
+.section-head{
+  max-width:660px;
+  margin-bottom:64px;
+}
+.section-head h2{
+  font-size:clamp(30px,4vw,46px);
+  margin-bottom:18px;
+}
+.section-head p{
+  color:var(--muted);
+  font-size:16.5px;
+}
+
+.grad-text{
+  background:linear-gradient(100deg,#fff 10%,var(--gold-2) 45%,var(--gold) 70%,#fff 95%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+/* Glass card */
+.glass{
+  background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+
+/* Reveal animation */
+.reveal{
+  opacity:0;
+  transform:translateY(34px);
+  transition:opacity .9s var(--ease),transform .9s var(--ease);
+  will-change:opacity,transform;
+}
+.reveal.in{opacity:1;transform:none;}
+
+/* ============================================================
+   3. NAVIGATION
+   ============================================================ */
+.nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:120;
+  height:76px;
+  display:flex;
+  align-items:center;
+  transition:background .4s var(--ease),border-color .4s var(--ease),height .4s var(--ease);
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  height:66px;
+  background:rgba(5,8,15,.78);
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  border-bottom-color:var(--border);
+}
+.nav .wrap{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-family:'Sora',sans-serif;
+  font-weight:600;
+  font-size:16.5px;
+  letter-spacing:-.01em;
+  white-space:nowrap;
+}
+.logo-mark{
+  width:34px;height:34px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(140deg,rgba(217,178,95,.22),rgba(56,224,192,.14));
+  border:1px solid rgba(217,178,95,.35);
+  position:relative;
+  overflow:hidden;
+  flex:none;
+}
+.logo-mark::after{
+  content:'';
+  position:absolute;
+  inset:-40%;
+  background:conic-gradient(from 0deg,transparent,rgba(243,221,163,.85),transparent 40%);
+  animation:spin 4.5s linear infinite;
+}
+.logo-mark span{
+  position:relative;
+  z-index:1;
+  width:12px;height:12px;
+  border-radius:50%;
+  background:linear-gradient(140deg,var(--gold-2),var(--gold));
+  box-shadow:0 0 12px rgba(217,178,95,.8);
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.logo small{
+  display:block;
+  font-family:'Inter',sans-serif;
+  font-size:9.5px;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--muted-2);
+  font-weight:500;
+  margin-top:-2px;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:36px;
+  list-style:none;
+  margin:0;padding:0;
+}
+.nav-links a{
+  font-size:14px;
+  color:var(--muted);
+  font-weight:500;
+  position:relative;
+  transition:color .3s var(--ease);
+  padding:4px 0;
+}
+.nav-links a::after{
+  content:'';
+  position:absolute;
+  left:0;bottom:0;
+  width:0;height:1px;
+  background:var(--gold);
+  transition:width .35s var(--ease);
+}
+.nav-links a:hover{color:var(--text);}
+.nav-links a:hover::after{width:100%;}
+
+.nav-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:11px 22px;
+  border-radius:100px;
+  font-size:13.5px;
+  font-weight:600;
+  color:#0a0d14;
+  background:linear-gradient(120deg,var(--gold-2),var(--gold));
+  box-shadow:0 6px 24px -8px rgba(217,178,95,.7);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+  white-space:nowrap;
+}
+.nav-cta:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px -8px rgba(217,178,95,.9);
+}
+
+.burger{
+  display:none;
+  width:42px;height:42px;
+  border-radius:11px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  cursor:pointer;
+  position:relative;
+}
+.burger span{
+  position:absolute;
+  left:11px;
+  width:20px;height:1.5px;
+  background:var(--text);
+  border-radius:2px;
+  transition:.3s var(--ease);
+}
+.burger span:nth-child(1){top:15px;}
+.burger span:nth-child(2){top:20.5px;}
+.burger span:nth-child(3){top:26px;}
+.burger.open span:nth-child(1){top:20.5px;transform:rotate(45deg);}
+.burger.open span:nth-child(2){opacity:0;}
+.burger.open span:nth-child(3){top:20.5px;transform:rotate(-45deg);}
+
+.mobile-menu{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:110;
+  padding:100px 28px 40px;
+  background:rgba(5,8,15,.97);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transform:translateY(-102%);
+  transition:transform .5s var(--ease);
+}
+.mobile-menu.open{transform:translateY(0);}
+.mobile-menu a{
+  display:block;
+  padding:16px 0;
+  font-family:'Sora',sans-serif;
+  font-size:20px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  color:var(--muted);
+}
+.mobile-menu a:hover{color:var(--gold);}
+
+/* ============================================================
+   4. HERO
+   ============================================================ */
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  padding:150px 0 90px;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:70px;
+  align-items:center;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:7px 16px 7px 12px;
+  border-radius:100px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.03);
+  font-size:12.5px;
+  color:var(--muted);
+  letter-spacing:.02em;
+  margin-bottom:28px;
+}
+.pulse-dot{
+  width:7px;height:7px;
+  border-radius:50%;
+  background:var(--up);
+  box-shadow:0 0 0 0 rgba(61,220,151,.6);
+  animation:pulse 2.2s infinite;
+  flex:none;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(61,220,151,.55);}
+  70%{box-shadow:0 0 0 9px rgba(61,220,151,0);}
+  100%{box-shadow:0 0 0 0 rgba(61,220,151,0);}
+}
+
+.hero h1{
+  font-size:clamp(40px,6vw,68px);
+  line-height:1.04;
+  margin-bottom:26px;
+  letter-spacing:-.035em;
+}
+.hero p.lead{
+  font-size:17.5px;
+  color:var(--muted);
+  max-width:520px;
+  margin-bottom:40px;
+  line-height:1.75;
+}
+
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-bottom:52px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:15px 30px;
+  border-radius:100px;
+  font-size:14.5px;
+  font-weight:600;
+  cursor:pointer;
+  border:1px solid transparent;
+  transition:all .35s var(--ease);
+  position:relative;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.btn-primary{
+  color:#0a0d14;
+  background:linear-gradient(120deg,var(--gold-2),var(--gold));
+  box-shadow:0 10px 34px -12px rgba(217,178,95,.85);
+}
+.btn-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 18px 40px -12px rgba(217,178,95,1);
+}
+.btn-ghost{
+  color:var(--text);
+  border-color:var(--border-strong);
+  background:rgba(255,255,255,.03);
+}
+.btn-ghost:hover{
+  border-color:rgba(217,178,95,.55);
+  background:rgba(217,178,95,.08);
+  transform:translateY(-3px);
+}
+.btn svg{transition:transform .35s var(--ease);}
+.btn:hover svg{transform:translateX(4px);}
+
+.hero-trust{
+  display:flex;
+  flex-wrap:wrap;
+  gap:36px;
+  padding-top:32px;
+  border-top:1px solid var(--border);
+}
+.hero-trust div strong{
+  display:block;
+  font-family:'Sora',sans-serif;
+  font-size:22px;
+  font-weight:600;
+  color:var(--text);
+  letter-spacing:-.02em;
+}
+.hero-trust div span{
+  font-size:11.5px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--muted-2);
+}
+
+/* Hero panel */
+.hero-panel{
+  padding:26px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 40px 90px -40px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.hero-panel::before{
+  content:'';
+  position:absolute;
+  top:-60%;right:-30%;
+  width:320px;height:320px;
+  background:radial-gradient(circle,rgba(217,178,95,.16),transparent 68%);
+  pointer-events:none;
+}
+
+.panel-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:6px;
+}
+.panel-head h3{
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:-.01em;
+}
+.panel-head .sub{
+  font-size:11.5px;
+  color:var(--muted-2);
+  letter-spacing:.06em;
+  margin-top:3px;
+}
+.live-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--up);
+  padding:5px 11px;
+  border-radius:100px;
+  background:rgba(61,220,151,.08);
+  border:1px solid rgba(61,220,151,.25);
+  flex:none;
+}
+
+.chart-box{
+  position:relative;
+  width:100%;
+  height:190px;
+  margin:18px 0 8px;
+}
+.chart-box canvas{width:100%;height:100%;display:block;}
+
+.panel-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--border);
+  border-radius:var(--radius-sm);
+  overflow:hidden;
+  margin-top:18px;
+}
+.panel-stats div{
+  background:rgba(8,13,24,.72);
+  padding:14px 14px 13px;
+}
+.panel-stats small{
+  display:block;
+  font-size:10.5px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--muted-2);
+  margin-bottom:5px;
+}
+.panel-stats strong{
+  font-family:'Sora',sans-serif;
+  font-size:16.5px;
+  font-weight:600;
+}
+.up{color:var(--up);}
+.down{color:var(--down);}
+
+/* ============================================================
+   5. TICKER
+   ============================================================ */
+.ticker{
+  position:relative;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:rgba(8,13,24,.55);
+  backdrop-filter:blur(10px);
+  overflow:hidden;
+  padding:15px 0;
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+}
+.ticker-track{
+  display:flex;
+  width:max-content;
+  gap:46px;
+  animation:marquee 42s linear infinite;
+}
+.ticker:hover .ticker-track{animation-play-state:paused;}
+@keyframes marquee{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+.tk{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  font-size:13px;
+  color:var(--muted);
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+.tk b{
+  color:var(--text);
+  font-weight:600;
+  font-size:12.5px;
+  letter-spacing:.05em;
+}
+.tk i{font-style:normal;font-weight:600;font-size:12.5px;}
+
+/* ============================================================
+   6. STATS STRIP
+   ============================================================ */
+.stats{
+  padding:86px 0;
+}
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.stat{
+  background:rgba(7,11,20,.66);
+  padding:38px 30px;
+  position:relative;
+  transition:background .4s var(--ease);
+}
+.stat:hover{background:rgba(13,20,34,.8);}
+.stat::after{
+  content:'';
+  position:absolute;
+  left:30px;top:0;
+  width:0;height:1.5px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  transition:width .5s var(--ease);
+}
+.stat:hover::after{width:56px;}
+.stat .num{
+  font-family:'Sora',sans-serif;
+  font-size:clamp(28px,3.4vw,40px);
+  font-weight:600;
+  letter-spacing:-.035em;
+  line-height:1;
+  margin-bottom:12px;
+  background:linear-gradient(160deg,#fff,var(--gold-2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.stat .lbl{
+  font-size:12.5px;
+  color:var(--muted);
+  letter-spacing:.05em;
+}
+.stat .sub{
+  font-size:11.5px;
+  color:var(--muted-2);
+  margin-top:6px;
+}
+
+/* ============================================================
+   7. STRATEGY CARDS
+   ============================================================ */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:22px;
+}
+.card{
+  position:relative;
+  padding:38px 34px 34px;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+  overflow:hidden;
+  transition:transform .5s var(--ease),border-color .5s var(--ease);
+  isolation:isolate;
+}
+.card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  opacity:0;
+  transition:opacity .45s var(--ease);
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(217,178,95,.13),transparent 62%);
+}
+.card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(217,178,95,.32);
+}
+.card:hover::before{opacity:1;}
+
+.card-icon{
+  width:46px;height:46px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  margin-bottom:24px;
+  background:linear-gradient(140deg,rgba(217,178,95,.16),rgba(56,224,192,.09));
+  border:1px solid rgba(217,178,95,.24);
+  color:var(--gold-2);
+}
+.card h3{
+  font-size:20px;
+  margin-bottom:12px;
+}
+.card p{
+  color:var(--muted);
+  font-size:14.5px;
+  line-height:1.72;
+  margin-bottom:24px;
+}
+.card-meta{
+  display:flex;
+  gap:26px;
+  padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.card-meta div small{
+  display:block;
+  font-size:10.5px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--muted-2);
+  margin-bottom:4px;
+}
+.card-meta div strong{
+  font-family:'Sora',sans-serif;
+  font-size:15px;
+  font-weight:600;
+  color:var(--gold-2);
+}
+.card-arrow{
+  position:absolute;
+  top:34px;right:30px;
+  color:var(--muted-2);
+  transition:transform .45s var(--ease),color .45s var(--ease);
+}
+.card:hover .card-arrow{
+  transform:translate(4px,-4px);
+  color:var(--gold);
+}
+
+/* ============================================================
+   8. PERFORMANCE
+   ============================================================ */
+.perf-grid{
+  display:grid;
+  grid-template-columns:1fr 340px;
+  gap:26px;
+  align-items:start;
+}
+.perf-main{
+  padding:30px;
+}
+.tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:26px;
+}
+.tab{
+  padding:9px 18px;
+  border-radius:100px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--muted);
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.02);
+  cursor:pointer;
+  transition:all .35s var(--ease);
+}
+.tab:hover{color:var(--text);border-color:var(--border-strong);}
+.tab.active{
+  color:#0a0d14;
+  background:linear-gradient(120deg,var(--gold-2),var(--gold));
+  border-color:transparent;
+  font-weight:600;
+}
+.perf-chart{
+  width:100%;
+  height:300px;
+  position:relative;
+}
+.perf-chart canvas{width:100%;height:100%;display:block;}
+
+.perf-side{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.metric{
+  padding:22px 24px;
+}
+.metric small{
+  display:block;
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted-2);
+  margin-bottom:8px;
+}
+.metric strong{
+  font-family:'Sora',sans-serif;
+  font-size:28px;
+  font-weight:600;
+  letter-spacing:-.03em;
+}
+.metric .delta{
+  font-size:12.5px;
+  margin-top:6px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.bars{
+  display:flex;
+  align-items:flex-end;
+  gap:4px;
+  height:34px;
+  margin-top:12px;
+}
+.bars i{
+  flex:1;
+  background:linear-gradient(180deg,var(--gold),rgba(217,178,95,.15));
+  border-radius:2px 2px 0 0;
+  display:block;
+  animation:barGrow .9s var(--ease) both;
+}
+@keyframes barGrow{from{height:0 !important;}}
+
+/* ============================================================
+   9. APPROACH / TIMELINE
+   ============================================================ */
+.timeline{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  position:relative;
+  margin-top:20px;
+}
+.timeline::before{
+  content:'';
+  position:absolute;
+  top:22px;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--border-strong) 12%,var(--border-strong) 88%,transparent);
+}
+.step{
+  padding:0 26px 0 0;
+  position:relative;
+}
+.step-dot{
+  width:45px;height:45px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:rgba(8,13,24,.95);
+  border:1px solid var(--border-strong);
+  font-family:'Sora',sans-serif;
+  font-size:13.5px;
+  font-weight:600;
+  color:var(--gold);
+  margin-bottom:26px;
+  position:relative;
+  z-index:1;
+  transition:.45s var(--ease);
+}
+.step:hover .step-dot{
+  border-color:var(--gold);
+  box-shadow:0 0 0 6px rgba(217,178,95,.07),0 0 26px -4px rgba(217,178,95,.55);
+  transform:translateY(-4px);
+}
+.step h4{
+  font-size:16.5px;
+  margin-bottom:10px;
+}
+.step p{
+  font-size:13.5px;
+  color:var(--muted);
+  line-height:1.72;
+}
+
+/* ============================================================
+   10. INSIGHTS
+   ============================================================ */
+.insights{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+.post{
+  padding:0;
+  overflow:hidden;
+  transition:transform .5s var(--ease),border-color .5s var(--ease);
+  cursor:pointer;
+}
+.post:hover{
+  transform:translateY(-6px);
+  border-color:rgba(217,178,95,.3);
+}
+.post-visual{
+  height:160px;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(150deg,#0b1322,#070b14);
+  border-bottom:1px solid var(--border);
+}
+.post-visual canvas{width:100%;height:100%;display:block;opacity:.9;}
+.post-body{padding:26px 26px 28px;}
+.post-tag{
+  display:inline-block;
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:12px;
+}
+.post h4{
+  font-size:17.5px;
+  line-height:1.35;
+  margin-bottom:12px;
+  transition:color .3s var(--ease);
+}
+.post:hover h4{color:var(--gold-2);}
+.post p{
+  font-size:13.5px;
+  color:var(--muted);
+  line-height:1.7;
+}
+.post-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.06);
+  font-size:12px;
+  color:var(--muted-2);
+}
+
+/* ============================================================
+   11. CTA
+   ============================================================ */
+.cta{
+  padding:0 0 110px;
+}
+.cta-inner{
+  padding:64px 56px;
+  border-radius:26px;
+  position:relative;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:60px;
+  align-items:center;
+  background:linear-gradient(150deg,rgba(217,178,95,.09),rgba(56,224,192,.045) 45%,rgba(255,255,255,.02));
+  border:1px solid rgba(217,178,95,.2);
+}
+.cta-inner::before{
+  content:'';
+  position:absolute;
+  top:-160px;left:-100px;
+  width:420px;height:420px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(217,178,95,.22),transparent 66%);
+  pointer-events:none;
+}
+.cta h2{
+  font-size:clamp(28px,3.6vw,40px);
+  margin-bottom:18px;
+  position:relative;
+}
+.cta p{
+  color:var(--muted);
+  font-size:15.5px;
+  max-width:440px;
+  position:relative;
+}
+
+.form{
+  display:grid;
+  gap:14px;
+  position:relative;
+}
+.field{
+  position:relative;
+}
+.field input,
+.field select{
+  width:100%;
+  padding:15px 18px;
+  border-radius:12px;
+  background:rgba(5,8,15,.6);
+  border:1px solid var(--border);
+  outline:none;
+  font-size:14px;
+  transition:border-color .3s var(--ease),background .3s var(--ease);
+  appearance:none;
+}
+.field select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b9bb4' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 18px center;
+  padding-right:44px;
+  cursor:pointer;
+}
+.field input::placeholder{color:var(--muted-2);}
+.field input:focus,
+.field select:focus{
+  border-color:rgba(217,178,95,.6);
+  background:rgba(5,8,15,.85);
+}
+.field select option{background:#0a1120;color:var(--text);}
+.form .btn{width:100%;}
+.form-note{
+  font-size:11.5px;
+  color:var(--muted-2);
+  text-align:center;
+  line-height:1.6;
+}
+.form-ok{
+  display:none;
+  padding:14px 18px;
+  border-radius:12px;
+  background:rgba(61,220,151,.09);
+  border:1px solid rgba(61,220,151,.3);
+  color:var(--up);
+  font-size:13.5px;
+  text-align:center;
+}
+
+/* ============================================================
+   12. FOOTER
+   ============================================================ */
+footer{
+  border-top:1px solid var(--border);
+  padding:72px 0 40px;
+  background:rgba(4,6,12,.6);
+  backdrop-filter:blur(10px);
+}
+.foot-grid{
+  display:grid;
+  grid-template-columns:1.6fr 1fr 1fr 1fr;
+  gap:44px;
+  margin-bottom:56px;
+}
+.foot-brand p{
+  color:var(--muted);
+  font-size:13.5px;
+  line-height:1.75;
+  margin:20px 0 24px;
+  max-width:320px;
+}
+.socials{display:flex;gap:10px;}
+.socials a{
+  width:36px;height:36px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.02);
+  color:var(--muted);
+  transition:.35s var(--ease);
+}
+.socials a:hover{
+  color:var(--gold);
+  border-color:rgba(217,178,95,.45);
+  transform:translateY(-3px);
+}
+.foot-col h5{
+  font-family:'Sora',sans-serif;
+  font-size:12px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--text);
+  margin:0 0 20px;
+  font-weight:600;
+}
+.foot-col ul{list-style:none;margin:0;padding:0;display:grid;gap:12px;}
+.foot-col a{
+  font-size:13.5px;
+  color:var(--muted);
+  transition:color .3s var(--ease),padding-left .3s var(--ease);
+}
+.foot-col a:hover{color:var(--gold-2);padding-left:5px;}
+
+.foot-bottom{
+  border-top:1px solid var(--border);
+  padding-top:28px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12.5px;
+  color:var(--muted-2);
+}
+.foot-bottom .legal{display:flex;gap:22px;flex-wrap:wrap;}
+.foot-bottom .legal a:hover{color:var(--gold);}
+
+.disclaimer{
+  margin-top:26px;
+  font-size:11.5px;
+  line-height:1.75;
+  color:#4d5a6d;
+  max-width:900px;
+}
+
+/* ============================================================
+   13. RESPONSIVE
+   ============================================================ */
+@media (max-width:1080px){
+  .hero-grid{grid-template-columns:1fr;gap:56px;}
+  .hero-panel{max-width:560px;}
+  .perf-grid{grid-template-columns:1fr;}
+  .perf-side{flex-direction:row;}
+  .metric{flex:1;}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:40px;}
+}
+
+@media (max-width:900px){
+  .nav-links,.nav-cta{display:none;}
+  .burger{display:block;}
+  section{padding:84px 0;}
+  .cards{grid-template-columns:1fr;}
+  .timeline{grid-template-columns:1fr 1fr;gap:44px 0;}
+  .timeline::before{display:none;}
+  .insights{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .cta-inner{grid-template-columns:1fr;padding:44px 32px;gap:38px;}
+}
+
+@media (max-width:600px){
+  .wrap{padding:0 20px;}
+  .hero{padding:130px 0 70px;}
+  .hero-trust{gap:26px;}
+  .hero-trust div strong{font-size:19px;}
+  .stats-grid{grid-template-columns:1fr;}
+  .stat{padding:30px 24px;}
+  .timeline{grid-template-columns:1fr;}
+  .perf-side{flex-direction:column;}
+  .panel-stats{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr;}
+  .cta-inner{padding:36px 24px;}
+  .foot-bottom{flex-direction:column;align-items:flex-start;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+  html{scroll-behavior:auto;}
+  .reveal{opacity:1;transform:none;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============ BACKGROUND ============ -->
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+<div class="noise" aria-hidden="true"></div>
+<div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#" class="logo" aria-label="Macro Horizon Investment home">
+      <span class="logo-mark"><span></span></span>
+      <span>
+        Macro Horizon
+        <small>Investment</small>
+      </span>
+    </a>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#strategies">Strategies</a></li>
+        <li><a href="#performance">Performance</a></li>
+        <li><a href="#approach">Approach</a></li>
+        <li><a href="#insights">Insights</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="#contact" class="nav-cta">
+        Client Access
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <button class="burger" id="burger" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#strategies">Strategies</a>
+  <a href="#performance">Performance</a>
+  <a href="#approach">Approach</a>
+  <a href="#insights">Insights</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<div class="page">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+
+        <div class="hero-copy">
+          <div class="badge reveal">
+            <span class="pulse-dot"></span>
+            Global macro · Independent since 2009
+          </div>
+
+          <h1 class="reveal" data-delay="80">
+            Invest beyond<br />the <span class="grad-text">horizon.</span>
+          </h1>
+
+          <p class="lead reveal" data-delay="160">
+            Macro Horizon builds resilient, research-driven portfolios that navigate
+            interest-rate cycles, currency regimes and structural shifts — across
+            public markets, private credit and real assets in 32 countries.
+          </p>
+
+          <div class="hero-actions reveal" data-delay="240">
+            <a href="#strategies" class="btn btn-primary">
+              Explore Strategies
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#performance" class="btn btn-ghost">
+              View Performance
+            </a>
+          </div>
+
+          <div class="hero-trust reveal" data-delay="320">
+            <div><strong>$18.4B</strong><span>Assets Managed</span></div>
+            <div><strong>11.8%</strong><span>10Y Annualized</span></div>
+            <div><strong>240+</strong><span>Institutional Partners</span></div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal" data-delay="200">
+          <div class="glass hero-panel">
+            <div class="panel-head">
+              <div>
+                <h3>Horizon Composite</h3>
+                <div class="sub">Multi-Asset · Net of Fees · USD</div>
+              </div>
+              <span class="live-tag"><span class="pulse-dot"></span>Live</span>
+            </div>
+
+            <div class="chart-box">
+              <canvas id="heroChart" aria-label="Horizon Composite performance chart"></canvas>
+            </div>
+
+            <div class="panel-stats">
+              <div>
+                <small>YTD</small>
+                <strong class="up">+14.62%</strong>
+              </div>
+              <div>
+                <small>Volatility</small>
+                <strong>7.4%</strong>
+              </div>
+              <div>
+                <small>Sharpe</small>
+                <strong>1.68</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TICKER ============ -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <!-- ============ STATS ============ -->
+  <section class="stats">
+    <div class="wrap">
+      <div class="stats-grid reveal">
+        <div class="stat">
+          <div class="num" data-count="18.4" data-decimals="1" data-prefix="$" data-suffix="B">$0B</div>
+          <div class="lbl">Assets under management</div>
+          <div class="sub">As of Q4 close</div>
+        </div>
+        <div class="stat">
+          <div class="num" data-count="11.8" data-decimals="1" data-suffix="%">0%</div>
+          <div class="lbl">Annualized return (10Y)</div>
+          <div class="sub">Composite net of fees</div>
+        </div>
+        <div class="stat">
+          <div class="num" data-count="240" data-suffix="+">0+</div>
+          <div class="lbl">Institutional partners</div>
+          <div class="sub">Pensions, endowments, SWFs</div>
+        </div>
+        <div class="stat">
+          <div class="num" data-count="32" data-suffix="">0</div>
+          <div class="lbl">Countries covered</div>
+          <div class="sub">Research &amp; execution</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STRATEGIES ============ -->
+  <section id="strategies">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Investment Strategies</div>
+        <h2>Four engines. One disciplined framework.</h2>
+        <p>
+          Each strategy runs on the same risk architecture, but expresses a distinct
+          source of return — so the portfolio stays balanced when any single regime breaks.
+        </p>
+      </div>
+
+      <div class="cards">
+
+        <article class="card reveal spotlight">
+          <div class="card-arrow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+          </div>
+          <div class="card-icon">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></svg>
+          </div>
+          <h3>Global Macro</h3>
+          <p>
+            Discretionary and systematic positions across sovereign rates, FX,
+            commodities and equity indices — driven by our proprietary regime
+            model and 40+ country macro dashboard.
+          </p>
+          <div class="card-meta">
+            <div><small>Target Return</small><strong>9–12%</strong></div>
+            <div><small>Volatility</small><strong>8–10%</strong></div>
+            <div><small>Liquidity</small><strong>Daily</strong></div>
+          </div>
+        </article>
+
+        <article class="card reveal spotlight" data-delay="80">
+          <div class="card-arrow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+          </div>
+          <div class="card-icon">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M6 20V10M11 20V4M16 20v-7M21 20v-11"/></svg>
+          </div>
+          <h3>Quantitative Equity</h3>
+          <p>
+            Multi-factor systematic equity built on 180+ signals spanning value,
+            quality, momentum and alternative data — with strict sector and
+            factor-neutral risk controls.
+          </p>
+          <div class="card-meta">
+            <div><small>Target Return</small><strong>8–11%</strong></div>
+            <div><small>Volatility</small><strong>6–8%</strong></div>
+            <div><small>Liquidity</small><strong>Weekly</strong></div>
+          </div>
+        </article>
+
+        <article class="card reveal spotlight" data-delay="160">
+          <div class="card-arrow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+          </div>
+          <div class="card-icon">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 12h18"/></svg>
+          </div>
+          <h3>Private Credit</h3>
+          <p>
+            Senior-secured direct lending to middle-market borrowers across North
+            America and Europe, with floating-rate structures and covenant
+            protection built into every facility.
+          </p>
+          <div class="card-meta">
+            <div><small>Target Return</small><strong>10–13%</strong></div>
+            <div><small>Volatility</small><strong>3–5%</strong></div>
+            <div><small>Liquidity</small><strong>Quarterly</strong></div>
+          </div>
+        </article>
+
+        <article class="card reveal spotlight" data-delay="240">
+          <div class="card-arrow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+          </div>
+          <div class="card-icon">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 22v-6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M22 12h-6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"/></svg>
+          </div>
+          <h3>Sustainable Infrastructure</h3>
+          <p>
+            Direct equity and structured debt in renewable generation, grid
+            modernization and energy-transition assets — targeting contracted,
+            inflation-linked cash flows over 15+ year horizons.
+          </p>
+          <div class="card-meta">
+            <div><small>Target Return</small><strong>9–12%</strong></div>
+            <div><small>Volatility</small><strong>4–6%</strong></div>
+            <div><small>Liquidity</small><strong>7–10 yrs</strong></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PERFORMANCE ============ -->
+  <section id="performance">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Performance</div>
+        <h2>Returns built to survive the cycle.</h2>
+        <p>
+          Illustrative composite track record, net of fees and expenses.
+          Past performance does not guarantee future results.
+        </p>
+      </div>
+
+      <div class="perf-grid">
+
+        <div class="glass perf-main reveal">
+          <div class="tabs" id="perfTabs">
+            <button class="tab active" data-key="composite">Horizon Composite</button>
+            <button class="tab" data-key="macro">Global Macro</button>
+            <button class="tab" data-key="quant">Quant Equity</button>
+            <button class="tab" data-key="credit">Private Credit</button>
+          </div>
+
+          <div class="perf-chart">
+            <canvas id="perfChart" aria-label="Strategy performance chart"></canvas>
+          </div>
+        </div>
+
+        <aside class="perf-side reveal" data-delay="120">
+          <div class="glass metric">
+            <small>Annualized Return</small>
+            <strong id="mReturn">+11.8%</strong>
+            <div class="delta up">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span id="mDelta">vs. benchmark +3.4%</span>
+            </div>
+          </div>
+
+          <div class="glass metric">
+            <small>Max Drawdown</small>
+            <strong id="mDrawdown">-8.2%</strong>
+            <div class="delta" style="color:var(--muted-2);">Peak-to-trough, monthly</div>
+            <div class="bars" id="mBars"></div>
+          </div>
+
+          <div class="glass metric">
+            <small>Sharpe Ratio</small>
+            <strong id="mSharpe">1.68</strong>
+            <div class="delta up">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span>Top decile vs. peers</span>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ APPROACH ============ -->
+  <section id="approach">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Our Approach</div>
+        <h2>From signal to stewardship.</h2>
+        <p>
+          A four-stage process that keeps every position accountable to the
+          same research standard and risk budget.
+        </p>
+      </div>
+
+      <div class="timeline">
+        <div class="step reveal">
+          <div class="step-dot">01</div>
+          <h4>Macro Research</h4>
+          <p>
+            A 40-country dashboard tracking growth, inflation, liquidity and
+            policy. We model regimes, not forecasts — and size positions to
+            the confidence of the regime call.
+          </p>
+        </div>
+        <div class="step reveal" data-delay="90">
+          <div class="step-dot">02</div>
+          <h4>Risk Architecture</h4>
+          <p>
+            Every strategy runs inside a hard risk budget with stress-tested
+            drawdown limits, correlation monitoring and independent
+            pre-trade validation.
+          </p>
+        </div>
+        <div class="step reveal" data-delay="180">
+          <div class="step-dot">03</div>
+          <h4>Execution</h4>
+          <p>
+            Multi-venue execution across equities, rates, FX and credit with
+            transaction-cost analysis at the portfolio level — not just the
+            trade level.
+          </p>
+        </div>
+        <div class="step reveal" data-delay="270">
+          <div class="step-dot">04</div>
+          <h4>Stewardship</h4>
+          <p>
+            Transparent monthly attribution, quarterly deep dives and direct
+            access to the investment team. No black boxes, no surprises.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INSIGHTS ============ -->
+  <section id="insights">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Research &amp; Insights</div>
+        <h2>What our desk is watching.</h2>
+        <p>Notes from the Macro Horizon investment committee.</p>
+      </div>
+
+      <div class="insights">
+
+        <article class="glass post reveal">
+          <div class="post-visual"><canvas class="mini-chart" data-seed="12" data-color="217,178,95"></canvas></div>
+          <div class="post-body">
+            <span class="post-tag">Rates</span>
+            <h4>The long end is repricing — and portfolios aren't ready</h4>
+            <p>
+              Term premium is returning after a decade of suppression. We break
+              down what that means for duration, real assets and equity multiples.
+            </p>
+            <div class="post-foot"><span>Feb 2025</span><span>9 min read</span></div>
+          </div>
+        </article>
+
+        <article class="glass post reveal" data-delay="90">
+          <div class="post-visual"><canvas class="mini-chart" data-seed="77" data-color="56,224,192"></canvas></div>
+          <div class="post-body">
+            <span class="post-tag">Credit</span>
+            <h4>Private credit spreads: where the compensation still works</h4>
+            <p>
+              Dispersion between upper and lower middle market is widening.
+              We map the segments where lender protections still justify the risk.
+            </p>
+            <div class="post-foot"><span>Jan 2025</span><span>12 min read</span></div>
+          </div>
+        </article>
+
+        <article class="glass post reveal" data-delay="180">
+          <div class="post-visual"><canvas class="mini-chart" data-seed="41" data-color="125,123,245"></canvas></div>
+          <div class="post-body">
+            <span class="post-tag">Infrastructure</span>
+            <h4>Grid capex is the trade of the decade — if you can access it</h4>
+            <p>
+              Electrification demand is colliding with 40-year-old transmission
+              assets. We look at where private capital actually gets deployed.
+            </p>
+            <div class="post-foot"><span>Dec 2024</span><span>11 min read</span></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA / CONTACT ============ -->
+  <section class="cta" id="contact">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <div class="eyebrow">Get Started</div>
+          <h2>Let's map your horizon.</h2>
+          <p>
+            Speak with a portfolio strategist about mandate fit, capacity and
+            reporting. Most conversations start with a 30-minute call and a
+            tailored allocation review.
+          </p>
+        </div>
+
+        <form class="form" id="contactForm" novalidate>
+          <div class="field">
+            <input type="text" name="name" placeholder="Full name" required />
+          </div>
+          <div class="field">
+            <input type="email" name="email" placeholder="Work email" required />
+          </div>
+          <div class="field">
+            <select name="mandate" required>
+              <option value="" disabled selected>Select a mandate</option>
+              <option>Global Macro</option>
+              <option>Quantitative Equity</option>
+              <option>Private Credit</option>
+              <option>Sustainable Infrastructure</option>
+              <option>Multi-Asset / Custom</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            Request Consultation
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <div class="form-ok" id="formOk">Thank you — a strategist will reach out within one business day.</div>
+          <p class="form-note">Your information is confidential and never shared.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+
+        <div class="foot-brand">
+          <a href="#" class="logo">
+            <span class="logo-mark"><span></span></span>
+            <span>Macro Horizon<small>Investment</small></span>
+          </a>
+          <p>
+            An independent global investment manager building resilient
+            portfolios for institutions, family offices and foundations
+            since 2009.
+          </p>
+          <div class="socials">
+            <a href="#" aria-label="LinkedIn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8.02h4.56V24H.22V8.02zM8.34 8.02h4.37v2.18h.06c.61-1.15 2.1-2.36 4.32-2.36 4.62 0 5.47 3.04 5.47 6.99V24h-4.56v-7.9c0-1.88-.03-4.3-2.62-4.3-2.62 0-3.02 2.05-3.02 4.16V24H8.34V8.02z"/></svg>
+            </a>
+            <a href="#" aria-label="X">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.1 8.1L23.2 22h-6.6l-5.2-6.8L5.5 22H2.3l7.6-8.7L1.1 2h6.8l4.7 6.2L18.9 2zm-1.1 18h1.8L7.3 3.8H5.4L17.8 20z"/></svg>
+            </a>
+            <a href="#" aria-label="Email">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="foot-col">
+          <h5>Strategies</h5>
+          <ul>
+            <li><a href="#strategies">Global Macro</a></li>
+            <li><a href="#strategies">Quantitative Equity</a></li>
+            <li><a href="#strategies">Private Credit</a></li>
+            <li><a href="#strategies">Sustainable Infrastructure</a></li>
+          </ul>
+        </div>
+
+        <div class="foot-col">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#approach">Our Approach</a></li>
+            <li><a href="#insights">Insights</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Newsroom</a></li>
+          </ul>
+        </div>
+
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="mailto:ir@macrohorizon.com">ir@macrohorizon.com</a></li>
+            <li><a href="tel:+12125550188">+1 (212) 555-0188</a></li>
+            <li><a href="#">New York · London · Singapore</a></li>
+            <li><a href="#contact">Client Access</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="foot-bottom">
+        <span>© <span id="year"></span> Macro Horizon Investment Management LP. All rights reserved.</span>
+        <div class="legal">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Disclosures</a>
+          <a href="#">Form ADV</a>
+        </div>
+      </div>
+
+      <p class="disclaimer">
+        This page is for informational purposes only and does not constitute an offer to sell
+        or a solicitation of an offer to buy any security or investment product. All performance
+        figures shown are illustrative and hypothetical, are net of estimated fees, and do not
+        represent the results of any actual client account. Past performance is not indicative
+        of future results. Investing involves risk, including possible loss of principal.
+      </p>
+    </div>
+  </footer>
+
+</div><!-- /.page -->
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  /* =========================================================
+     1. ANIMATED BACKGROUND (canvas)
+     ========================================================= */
+  (function background() {
+    var cv = document.getElementById('bg-canvas');
+    if (!cv) return;
+    var ctx = cv.getContext('2d', { alpha: false });
+
+    var W = 0, H = 0;
+    var particles = [];
+    var blobs = [
+      { x: 0.16, y: 0.22, r: 0.62, c: '217,178,95', a: 0.13, sx: 0.00010, sy: 0.00013, ph: 0.0 },
+      { x: 0.84, y: 0.16, r: 0.55, c: '56,224,192', a: 0.10, sx: 0.00013, sy: 0.00009, ph: 1.7 },
+      { x: 0.68, y: 0.78, r: 0.68, c: '125,123,245', a: 0.10, sx: 0.00008, sy: 0.00011, ph: 3.1 },
+      { x: 0.24, y: 0.86, r: 0.50, c: '217,178,95', a: 0.07, sx: 0.00012, sy: 0.00007, ph: 4.6 },
+      { x: 0.50, y: 0.45, r: 0.78, c: '40,90,180', a: 0.09, sx: 0.00006, sy: 0.00010, ph: 5.9 }
+    ];
+
+    function resize() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      cv.width = Math.floor(W * DPR);
+      cv.height = Math.floor(H * DPR);
+      cv.style.width = W + 'px';
+      cv.style.height = H + 'px';
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      buildParticles();
+    }
+
+    function buildParticles() {
+      var count = Math.round((W * H) / 17000);
+      count = Math.max(28, Math.min(110, count));
+      particles = [];
+      for (var i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          r: Math.random() * 1.5 + 0.4
+        });
+      }
+    }
+
+    function drawGrid(t) {
+      var step = 84;
+      var off = (t * 0.008) % step;
+      ctx.strokeStyle = 'rgba(125,155,205,0.05)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (var x = -off; x < W + step; x += step) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, H);
+      }
+      for (var y = -off; y < H + step; y += step) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(W, y);
+      }
+      ctx.stroke();
+    }
+
+    function drawBlobs(t) {
+      for (var i = 0; i < blobs.length; i++) {
+        var b = blobs[i];
+        var bx = (b.x + Math.sin(t * b.sx + b.ph) * 0.085) * W;
+        var by = (b.y + Math.cos(t * b.sy + b.ph) * 0.10) * H;
+        var br = b.r * Math.max(W, H) * 0.62;
+        var g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+        g.addColorStop(0, 'rgba(' + b.c + ',' + b.a + ')');
+        g.addColorStop(0.55, 'rgba(' + b.c + ',' + (b.a * 0.32) + ')');
+        g.addColorStop(1, 'rgba(' + b.c + ',0)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(bx, by, br, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawWaves(t) {
+      var baseY = H - 90;
+      var colors = [
+        'rgba(217,178,95,0.10)',
+        'rgba(56,224,192,0.075)',
+        'rgba(125,123,245,0.06)'
+      ];
+      for (var k = 0; k < 3; k++) {
+        ctx.beginPath();
+        for (var x = 0; x <= W + 10; x += 12) {
+          var y = baseY - k * 34
+            + Math.sin(x * 0.0055 + t * 0.00055 + k * 1.4) * 24
+            + Math.sin(x * 0.0125 - t * 0.00085 + k) * 10;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = colors[k];
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+    }
+
+    function drawParticles(t) {
+      var i, j, p, q, dx, dy, d2, d;
+      var linkDist = 132;
+      var linkDist2 = linkDist * linkDist;
+
+      for (i = 0; i < particles.length; i++) {
+        p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < -20) p.x = W + 20;
+        if (p.x > W + 20) p.x = -20;
+        if (p.y < -20) p.y = H + 20;
+        if (p.y > H + 20) p.y = -20;
+      }
+
+      // connections
+      for (i = 0; i < particles.length; i++) {
+        p = particles[i];
+        for (j = i + 1; j < particles.length; j++) {
+          q = particles[j];
+          dx = p.x - q.x;
+          dy = p.y - q.y;
+          d2 = dx * dx + dy * dy;
+          if (d2 < linkDist2) {
+            d = Math.sqrt(d2);
+            var alpha = (1 - d / linkDist) * 0.17;
+            ctx.strokeStyle = 'rgba(150,185,240,' + alpha + ')';
+            ctx.lineWidth = 0.7;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // dots
+      for (i = 0; i < particles.length; i++) {
+        p = particles[i];
+        var glow = 0.35 + Math.sin(t * 0.0012 + i) * 0.18;
+        ctx.fillStyle = 'rgba(210,228,255,' + glow + ')';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function frame(now) {
+      var t = now;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#05080f';
+      ctx.fillRect(0, 0, W, H);
+
+      drawGrid(t);
+
+      ctx.globalCompositeOperation = 'lighter';
+      drawBlobs(t);
+      drawWaves(t);
+      drawParticles(t);
+      ctx.globalCompositeOperation = 'source-over';
+
+      if (!reduced) requestAnimationFrame(frame);
+    }
+
+    resize();
+    window.addEventListener('resize', function () {
+      clearTimeout(window.__bgResize);
+      window.__bgResize = setTimeout(resize, 160);
+    });
+
+    requestAnimationFrame(frame);
+  })();
+
+  /* =========================================================
+     2. SCROLL PROGRESS + NAV STATE
+     ========================================================= */
+  var progressBar = document.getElementById('progressBar');
+  var nav = document.getElementById('nav');
+
+  function onScroll() {
+    var st = window.pageYOffset || document.documentElement.scrollTop;
+    var dh = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = dh > 0 ? (st / dh) * 100 : 0;
+    if (progressBar) progressBar.style.width = pct + '%';
+    if (nav) nav.classList.toggle('scrolled', st > 40);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* =========================================================
+     3. MOBILE MENU
+     ========================================================= */
+  var burger = document.getElementById('burger');
+  var mobileMenu = document.getElementById('mobileMenu');
+
+  if (burger && mobileMenu) {
+    burger.addEventListener('click', function () {
+      var open = mobileMenu.classList.toggle('open');
+      burger.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    mobileMenu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        mobileMenu.classList.remove('open');
+        burger.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  /* =========================================================
+     4. REVEAL ON SCROLL
+     ========================================================= */
+  var revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          var delay = parseInt(el.getAttribute('data-delay') || '0', 10);
+          setTimeout(function () { el.classList.add('in'); }, delay);
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -60px 0px' });
+
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* =========================================================
+     5. SPOTLIGHT HOVER ON CARDS
+     ========================================================= */
+  document.querySelectorAll('.spotlight').forEach(function (card) {
+    card.addEventListener('mousemove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  /* =========================================================
+     6. COUNTERS
+     ========================================================= */
+  function animateCounter(el) {
+    var target = parseFloat(el.getAttribute('data-count'));
+    var decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+    var prefix = el.getAttribute('data-prefix') || '';
+    var suffix = el.getAttribute('data-suffix') || '';
+    var duration = 1700;
+    var start = null;
+
+    function tick(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      var val = target * eased;
+      el.textContent = prefix + val.toFixed(decimals) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = prefix + target.toFixed(decimals) + suffix;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  var counters = document.querySelectorAll('[data-count]');
+  if ('IntersectionObserver' in window && !reduced) {
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          cio.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(function (el) { cio.observe(el); });
+  } else {
+    counters.forEach(function (el) {
+      var decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+      el.textContent = (el.getAttribute('data-prefix') || '') +
+        parseFloat(el.getAttribute('data-count')).toFixed(decimals) +
+        (el.getAttribute('data-suffix') || '');
+    });
+  }
+
+  /* =========================================================
+     7. TICKER BUILDER
+     ========================================================= */
+  (function buildTicker() {
+    var track = document.getElementById('tickerTrack');
+    if (!track) return;
+    var data = [
+      ['S&P 500', '5,842.31', '+0.68%', 1],
+      ['NASDAQ', '19,214.07', '+1.12%', 1],
+      ['US 10Y', '4.183%', '-2.4bp', 1],
+      ['DXY', '103.42', '-0.21%', 0],
+      ['GOLD', '2,684.10', '+0.94%', 1],
+      ['BRENT', '78.42', '-0.37%', 0],
+      ['EUR/USD', '1.0874', '+0.16%', 1],
+      ['BTC', '67,120', '+2.41%', 1],
+      ['VIX', '14.82', '-3.10%', 1],
+      ['EM EQUITY', '1,142.60', '+0.45%', 1],
+      ['US IG CREDIT', '98.24', '+0.08%', 1],
+      ['JGB 10Y', '1.092%', '+1.1bp', 0]
+    ];
+
+    var html = '';
+    for (var pass = 0; pass < 2; pass++) {
+      data.forEach(function (d) {
+        html += '<span class="tk"><b>' + d[0] + '</b> ' + d[1] +
+          ' <i class="' + (d[3] ? 'up' : 'down') + '">' + d[2] + '</i></span>';
+      });
+    }
+    track.innerHTML = html;
+  })();
+
+  /* =========================================================
+     8. CHART ENGINE
+     ========================================================= */
+  function easeOutCubic(p) { return 1 - Math.pow(1 - p, 3); }
+
+  function makeSeries(seed, n, drift, vol) {
+    var s = seed || 1;
+    function rnd() {
+      s = (s * 16807) % 2147483647;
+      return s / 2147483647;
+    }
+    var v = 0.34;
+    var out = [];
+    for (var i = 0; i < n; i++) {
+      v += (rnd() - 0.48) * (vol || 0.075) + (drift || 0.006);
+      if (v < 0.06) v = 0.06;
+      if (v > 0.95) v = 0.95;
+      out.push(v);
+    }
+    return out;
+  }
+
+  function drawLineChart(cv, values, rgb, progress, opts) {
+    if (!cv) return;
+    opts = opts || {};
+    var rect = cv.getBoundingClientRect();
+    var w = rect.width || cv.parentElement.clientWidth;
+    var h = rect.height || 200;
+    if (w <= 0 || h <= 0) return;
+
+    cv.width = Math.floor(w * DPR);
+    cv.height = Math.floor(h * DPR);
+    var g = cv.getContext('2d');
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    g.clearRect(0, 0, w, h);
+
+    var padT = 12, padB = 18, padL = 4, padR = 4;
+    var cw = w - padL - padR;
+    var ch = h - padT - padB;
+
+    // grid
+    if (opts.grid !== false) {
+      g.strokeStyle = 'rgba(255,255,255,0.045)';
+      g.lineWidth = 1;
+      for (var gy = 0; gy <= 4; gy++) {
+        var yy = padT + (ch / 4) * gy;
+        g.beginPath();
+        g.moveTo(padL, yy);
+        g.lineTo(padL + cw, yy);
+        g.stroke();
+      }
+    }
+
+    var n = values.length;
+    var pts = [];
+    for (var i = 0; i < n; i++) {
+      var x = padL + (cw * i) / (n - 1);
+      var y = padT + ch - values[i] * ch;
+      pts.push([x, y]);
+    }
+
+    // animated clip by progress
+    var visibleCount = Math.max(2, Math.floor(n * progress));
+    var drawPts = pts.slice(0, visibleCount);
+
+    // partial last segment
+    if (visibleCount < n) {
+      var frac = (n * progress) - visibleCount;
+      var a = pts[visibleCount - 1];
+      var b = pts[visibleCount];
+      drawPts.push([a[0] + (b[0] - a[0]) * frac, a[1] + (b[1] - a[1]) * frac]);
+    }
+
+    if (drawPts.length < 2) return;
+
+    // area fill
+    var grad = g.createLinearGradient(0, padT, 0, padT + ch);
+    grad.addColorStop(0, 'rgba(' + rgb + ',0.30)');
+    grad.addColorStop(0.55, 'rgba(' + rgb + ',0.09)');
+    grad.addColorStop(1, 'rgba(' + rgb + ',0)');
+
+    g.beginPath();
+    g.moveTo(drawPts[0][0], padT + ch);
+    for (var k = 0; k < drawPts.length; k++) g.lineTo(drawPts[k][0], drawPts[k][1]);
+    g.lineTo(drawPts[drawPts.length - 1][0], padT + ch);
+    g.closePath();
+    g.fillStyle = grad;
+    g.fill();
+
+    // line
+    g.beginPath();
+    g.moveTo(drawPts[0][0], drawPts[0][1]);
+    for (var m = 1; m < drawPts.length; m++) g.lineTo(drawPts[m][0], drawPts[m][1]);
+    g.strokeStyle = 'rgba(' + rgb + ',1)';
+    g.lineWidth = 2;
+    g.lineJoin = 'round';
+    g.lineCap = 'round';
+    g.shadowColor = 'rgba(' + rgb + ',0.55)';
+    g.shadowBlur = 14;
+    g.stroke();
+    g.shadowBlur = 0;
+
+    // head dot
+    var head = drawPts[drawPts.length - 1];
+    g.beginPath();
+    g.arc(head[0], head[1], 4, 0, Math.PI * 2);
+    g.fillStyle = 'rgba(' + rgb + ',1)';
+    g.fill();
+    g.beginPath();
+    g.arc(head[0], head[1], 9, 0, Math.PI * 2);
+    g.fillStyle = 'rgba(' + rgb + ',0.16)';
+    g.fill();
+
+    // baseline
+    g.beginPath();
+    g.moveTo(padL, padT + ch);
+    g.lineTo(padL + cw, padT + ch);
+    g.strokeStyle = 'rgba(255,255,255,0.08)';
+    g.lineWidth = 1;
+    g.stroke();
+  }
+
+  function animateChart(cv, values, rgb, opts) {
+    if (!cv) return;
+    if (reduced) { drawLineChart(cv, values, rgb, 1, opts); return; }
+    var start = null;
+    var dur = 1250;
+    if (cv.__raf) cancelAnimationFrame(cv.__raf);
+
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      drawLineChart(cv, values, rgb, easeOutCubic(p), opts);
+      if (p < 1) cv.__raf = requestAnimationFrame(step);
+    }
+    cv.__raf = requestAnimationFrame(step);
+  }
+
+  /* =========================================================
+     9. HERO CHART
+     ========================================================= */
+  var heroCanvas = document.getElementById('heroChart');
+  var heroData = makeSeries(23, 64, 0.0085, 0.06);
+
+  if (heroCanvas && 'IntersectionObserver' in window) {
+    var hio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          animateChart(heroCanvas, heroData, '217,178,95', { grid: true });
+          hio.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    hio.observe(heroCanvas);
+  } else if (heroCanvas) {
+    animateChart(heroCanvas, heroData, '217,178,95', { grid: true });
+  }
+
+  /* =========================================================
+     10. PERFORMANCE CHART + TABS
+     ========================================================= */
+  var perfCanvas = document.getElementById('perfChart');
+  var perfSets = {
+    composite: { data: makeSeries(23, 84, 0.0082, 0.058), rgb: '217,178,95', ret: '+11.8%', dd: '-8.2%', sharpe: '1.68', delta: 'vs. benchmark +3.4%' },
+    macro:     { data: makeSeries(51, 84, 0.0072, 0.070), rgb: '56,224,192', ret: '+10.4%', dd: '-9.6%', sharpe: '1.42', delta: 'vs. benchmark +2.1%' },
+    quant:     { data: makeSeries(88, 84, 0.0065, 0.055), rgb: '125,123,245', ret: '+9.1%',  dd: '-7.4%', sharpe: '1.51', delta: 'vs. benchmark +1.8%' },
+    credit:    { data: makeSeries(14, 84, 0.0058, 0.028), rgb: '243,221,163', ret: '+11.2%', dd: '-3.1%', sharpe: '2.04', delta: 'vs. benchmark +4.6%' }
+  };
+  var currentPerf = 'composite';
+
+  function renderPerf(key) {
+    var set = perfSets[key];
+    if (!set) return;
+    currentPerf = key;
+    animateChart(perfCanvas, set.data, set.rgb, { grid: true });
+
+    var elRet = document.getElementById('mReturn');
+    var elDd = document.getElementById('mDrawdown');
+    var elSh = document.getElementById('mSharpe');
+    var elDelta = document.getElementById('mDelta');
+
+    if (elRet) elRet.textContent = set.ret;
+    if (elDd) elDd.textContent = set.dd;
+    if (elSh) elSh.textContent = set.sharpe;
+    if (elDelta) elDelta.textContent = set.delta;
+
+    buildBars(set.data);
+  }
+
+  function buildBars(data) {
+    var holder = document.getElementById('mBars');
+    if (!holder) return;
+    holder.innerHTML = '';
+    // sample 16 points for the mini bars
+    var step = Math.max(1, Math.floor(data.length / 16));
+    var max = Math.max.apply(null, data);
+    for (var i = 0; i < data.length; i += step) {
+      var bar = document.createElement('i');
+      var hpct = Math.max(12, (data[i] / max) * 100);
+      bar.style.height = hpct + '%';
+      bar.style.animationDelay = (i * 8) + 'ms';
+      holder.appendChild(bar);
+    }
+  }
+
+  if (perfCanvas) {
+    if ('IntersectionObserver' in window) {
+      var pio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            renderPerf('composite');
+            pio.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.25 });
+      pio.observe(perfCanvas);
+    } else {
+      renderPerf('composite');
+    }
+  }
+
+  document.querySelectorAll('#perfTabs .tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('#perfTabs .tab').forEach(function (t) {
+        t.classList.remove('active');
+      });
+      tab.classList.add('active');
+      renderPerf(tab.getAttribute('data-key'));
+    });
+  });
+
+  /* =========================================================
+     11. MINI CHART THUMBNAILS (insights)
+     ========================================================= */
+  var minis = document.querySelectorAll('.mini-chart');
+  minis.forEach(function (cv, idx) {
+    var seed = parseInt(cv.getAttribute('data-seed') || '7', 10);
+    var rgb = cv.getAttribute('data-color') || '217,178,95';
+    var data = makeSeries(seed, 46, 0.006, 0.08);
+
+    function paint(progress) {
+      var rect = cv.getBoundingClientRect();
+      var w = rect.width || 300;
+      var h = rect.height || 160;
+      if (w <= 0) return;
+      cv.width = Math.floor(w * DPR);
+      cv.height = Math.floor(h * DPR);
+      var g = cv.getContext('2d');
+      g.setTransform(DPR, 0, 0, DPR, 0, 0);
+      g.clearRect(0, 0, w, h);
+
+      var n = data.length;
+      var pts = [];
+      for (var i = 0; i < n; i++) {
+        pts.push([(w * i) / (n - 1), h - 18 - data[i] * (h - 50)]);
+      }
+      var count = Math.max(2, Math.floor(n * progress));
+      var vis = pts.slice(0, count);
+
+      var grad = g.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, 'rgba(' + rgb + ',0.35)');
+      grad.addColorStop(1, 'rgba(' + rgb + ',0)');
+
+      g.beginPath();
+      g.moveTo(vis[0][0], h);
+      for (var a = 0; a < vis.length; a++) g.lineTo(vis[a][0], vis[a][1]);
+      g.lineTo(vis[vis.length - 1][0], h);
+      g.closePath();
+      g.fillStyle = grad;
+      g.fill();
+
+      g.beginPath();
+      g.moveTo(vis[0][0], vis[0][1]);
+      for (var b = 1; b < vis.length; b++) g.lineTo(vis[b][0], vis[b][1]);
+      g.strokeStyle = 'rgba(' + rgb + ',0.95)';
+      g.lineWidth = 1.8;
+      g.lineJoin = 'round';
+      g.shadowColor = 'rgba(' + rgb + ',0.5)';
+      g.shadowBlur = 10;
+      g.stroke();
+      g.shadowBlur = 0;
+    }
+
+    if ('IntersectionObserver' in window && !reduced) {
+      var mio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            var start = null;
+            (function step(ts) {
+              if (!start) start = ts;
+              var p = Math.min((ts - start) / 1100, 1);
+              paint(easeOutCubic(p));
+              if (p < 1) requestAnimationFrame(step);
+            })(performance.now());
+            mio.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      mio.observe(cv);
+    } else {
+      paint(1);
+    }
+  });
+
+  /* =========================================================
+     12. REDRAW CHARTS ON RESIZE
+     ========================================================= */
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      if (heroCanvas) drawLineChart(heroCanvas, heroData, '217,178,95', 1, { grid: true });
+      if (perfCanvas && perfSets[currentPerf]) {
+        drawLineChart(perfCanvas, perfSets[currentPerf].data, perfSets[currentPerf].rgb, 1, { grid: true });
+      }
+      minis.forEach(function (cv) {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0) {
+          var evt = new Event('resize');
+          // simple repaint via stored data
+          var seed = parseInt(cv.getAttribute('data-seed') || '7', 10);
+          var rgb = cv.getAttribute('data-color') || '217,178,95';
+          var data = makeSeries(seed, 46, 0.006, 0.08);
+          var w = rect.width, h = rect.height;
+          cv.width = Math.floor(w * DPR);
+          cv.height = Math.floor(h * DPR);
+          var g = cv.getContext('2d');
+          g.setTransform(DPR, 0, 0, DPR, 0, 0);
+          g.clearRect(0, 0, w, h);
+          var n = data.length, pts = [];
+          for (var i = 0; i < n; i++) pts.push([(w * i) / (n - 1), h - 18 - data[i] * (h - 50)]);
+          var grad = g.createLinearGradient(0, 0, 0, h);
+          grad.addColorStop(0, 'rgba(' + rgb + ',0.35)');
+          grad.addColorStop(1, 'rgba(' + rgb + ',0)');
+          g.beginPath();
+          g.moveTo(pts[0][0], h);
+          for (var a = 0; a < pts.length; a++) g.lineTo(pts[a][0], pts[a][1]);
+          g.lineTo(pts[pts.length - 1][0], h);
+          g.closePath();
+          g.fillStyle = grad;
+          g.fill();
+          g.beginPath();
+          g.moveTo(pts[0][0], pts[0][1]);
+          for (var b = 1; b < pts.length; b++) g.lineTo(pts[b][0], pts[b][1]);
+          g.strokeStyle = 'rgba(' + rgb + ',0.95)';
+          g.lineWidth = 1.8;
+          g.stroke();
+        }
+      });
+    }, 200);
+  });
+
+  /* =========================================================
+     13. CONTACT FORM
+     ========================================================= */
+  var form = document.getElementById('contactForm');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var ok = document.getElementById('formOk');
+      var valid = true;
+      form.querySelectorAll('[required]').forEach(function (f) {
+        if (!f.value.trim()) {
+          valid = false;
+          f.style.borderColor = 'rgba(255,107,122,.7)';
+        } else {
+          f.style.borderColor = '';
+        }
+      });
+      if (!valid) return;
+      if (ok) ok.style.display = 'block';
+      form.querySelectorAll('input, select').forEach(function (f) { f.value = ''; });
+    });
+  }
+
+  /* =========================================================
+     14. FOOTER YEAR
+     ========================================================= */
+  var yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+})();
+</script>
+
+</body>
+</html>

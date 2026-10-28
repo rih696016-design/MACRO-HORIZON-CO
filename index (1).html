@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOBAL MACRO · Strategic Investments</title>
+    <!-- Font Awesome for subtle icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #05080f;
+            --surface: rgba(255, 255, 255, 0.035);
+            --border: rgba(255, 255, 255, 0.09);
+            --border-strong: rgba(255, 255, 255, 0.17);
+            --text: #e9eefb;
+            --muted: #8b9bb4;
+            --muted-2: #647389;
+            --gold: #d9b25f;
+            --gold-2: #f3dda3;
+            --teal: #38e0c0;
+            --up: #3ddc97;
+            --down: #ff6b7a;
+            --blue: #4aa8ff;
+            --violet: #7d7bf5;
+            --radius: 18px;
+            --max: 1280px;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Sora', system-ui, sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        /* --- MOVING DARK BACKGROUND (Matches Dashboard) --- */
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: .026;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* --- CONTAINER & LAYOUT --- */
+        .container {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- TYPOGRAPHY & ACCENTS --- */
+        h1 {
+            font-size: clamp(2.8rem, 8vw, 5.5rem);
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff 0%, var(--gold-2) 60%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 30px rgba(217, 178, 95, 0.15);
+        }
+
+        .accent-glow {
+            color: var(--gold-2);
+            text-shadow: 0 0 20px rgba(217, 178, 95, 0.4);
+            font-weight: 400;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            color: var(--muted);
+            max-width: 700px;
+            margin-bottom: 2rem;
+            border-left: 3px solid var(--gold);
+            padding-left: 1.5rem;
+            background: linear-gradient(90deg, rgba(217, 178, 95, 0.05), transparent);
+        }
+
+        /* --- HEADER / NAV --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--gold);
+            font-size: 1.2rem;
+            filter: drop-shadow(0 0 8px rgba(217, 178, 95, 0.4));
+        }
+
+        .logo span {
+            font-weight: 300; 
+            color: var(--muted);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: 0.3s;
+            font-weight: 500;
+            font-size: 0.8rem;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 4px;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            border-bottom-color: var(--gold);
+        }
+
+        .nav-links a i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+            color: var(--gold);
+        }
+
+        /* --- HERO --- */
+        .hero {
+            margin: 2rem 0 4rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(217, 178, 95, 0.1);
+            border: 1px solid rgba(217, 178, 95, 0.3);
+            color: var(--gold-2);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-quote {
+            font-size: 1.15rem;
+            color: var(--muted);
+            font-style: italic;
+            border-left: 2px solid var(--gold);
+            padding-left: 1.5rem;
+            margin: 2rem 0 1rem;
+            opacity: 0.9;
+        }
+
+        /* --- CARDS / MODULES --- */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0 2rem;
+        }
+
+        .card {
+            background: linear-gradient(160deg, rgba(255,255,255,.052), rgba(255,255,255,.015));
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.2rem 1.8rem;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s ease, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            border-color: rgba(217, 178, 95, 0.4);
+            box-shadow: 0 25px 45px -12px #000, 0 0 25px -5px rgba(217, 178, 95, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .card i {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 1.2rem;
+            filter: drop-shadow(0 0 10px rgba(217, 178, 95, 0.3));
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: var(--text);
+        }
+
+        .card p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .card ul {
+            list-style: none;
+            color: var(--muted);
+        }
+
+        .card ul li {
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .card ul li i {
+            font-size: 0.5rem;
+            color: var(--teal);
+            margin-top: 8px;
+            filter: none;
+        }
+
+        /* --- DETAILED SECTION --- */
+        .strategy-detail {
+            background: linear-gradient(160deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            border: 1px solid var(--border);
+            margin: 3rem 0;
+            box-shadow: 0 30px 50px -25px #000;
+        }
+
+        .strategy-detail h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text);
+        }
+
+        .strategy-detail h2 i {
+            color: var(--gold);
+            font-size: 1.6rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .detail-item {
+            background: rgba(8, 13, 24, 0.6);
+            border-radius: 14px;
+            padding: 1.5rem;
+            border-left: 3px solid var(--border-strong);
+            transition: 0.3s;
+        }
+
+        .detail-item:hover {
+            background: rgba(14, 22, 36, 0.8);
+            border-left-color: var(--gold);
+        }
+
+        .detail-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            color: var(--gold-2);
+        }
+
+        .detail-item p {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- NEW: INVESTMENT OPPORTUNITIES SECTION --- */
+        .opportunities-section {
+            margin: 4rem 0;
+        }
+        
+        .opportunities-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .opportunities-section h2 i {
+            color: var(--teal);
+        }
+
+        .opportunities-section p.subtitle {
+            color: var(--muted);
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        .opp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .opp-card {
+            background: linear-gradient(160deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.8rem;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .opp-card:hover {
+            border-color: rgba(56, 224, 192, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .opp-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: rgba(56, 224, 192, 0.08);
+            border: 1px solid rgba(56, 224, 192, 0.2);
+            display: grid; place-items: center;
+            margin-bottom: 1.2rem;
+            color: var(--teal);
+            font-size: 1.2rem;
+        }
+
+        .opp-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.6rem;
+            color: var(--text);
+        }
+
+        .opp-card p {
+            font-size: 0.95rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* --- NEW: WHO CAN BENEFIT SECTION --- */
+        .benefit-section {
+            background: rgba(5, 8, 15, 0.6);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            margin: 4rem 0;
+        }
+
+        .benefit-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .benefit-section h2 i {
+            color: var(--violet);
+        }
+
+        .benefit-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            list-style: none;
+        }
+
+        .benefit-list li {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.2rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: var(--muted);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .benefit-list li i {
+            color: var(--violet);
+            margin-top: 4px;
+        }
+
+        /* --- NEW: RESPONSIBLE INVESTING SECTION --- */
+        .responsible-section {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.02), transparent);
+            border-left: 4px solid var(--gold);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 2.5rem;
+            margin: 4rem 0;
+        }
+
+        .responsible-section h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: var(--gold-2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .responsible-section p {
+            color: var(--muted);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            max-width: 900px;
+        }
+
+        .responsible-section .highlight-box {
+            background: rgba(217, 178, 95, 0.08);
+            border: 1px solid rgba(217, 178, 95, 0.2);
+            padding: 1.2rem;
+            border-radius: 8px;
+            color: var(--text);
+            font-weight: 500;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .responsible-section .highlight-box i {
+            color: var(--gold);
+        }
+
+        /* --- MARKET SNAPSHOT --- */
+        .market-snapshot {
+            margin: 4rem 0 2rem;
+            border-radius: var(--radius);
+            background: linear-gradient(160deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .snapshot-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .snapshot-header h3 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+
+        .snapshot-header h3 i {
+            color: var(--gold);
+        }
+
+        .snapshot-header span {
+            font-size: 0.85rem;
+            color: var(--muted-2);
+        }
+
+        .snapshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            padding: 1.5rem 2rem;
+            gap: 1.5rem;
+        }
+
+        .snapshot-item {
+            background: rgba(8, 13, 24, 0.6);
+            border-radius: 12px;
+            padding: 1.2rem;
+            border: 1px solid var(--border);
+            transition: 0.2s;
+        }
+
+        .snapshot-item:hover {
+            border-color: rgba(217, 178, 95, 0.3);
+            background: rgba(20, 30, 45, 0.8);
+        }
+
+        .snapshot-item .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted-2);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .snapshot-item .value {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.3;
+            transition: 0.2s;
+        }
+
+        .snapshot-item:hover .value {
+            text-shadow: 0 0 15px rgba(217, 178, 95, 0.5);
+        }
+
+        .snapshot-item .change {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .positive {
+            color: var(--up);
+        }
+
+        .negative {
+            color: var(--down);
+        }
+
+        /* --- CTA / BUTTON --- */
+        .cta-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(110deg, rgba(217, 178, 95, 0.08), rgba(255, 255, 255, 0.02));
+            border-radius: var(--radius);
+            padding: 2.5rem 3rem;
+            margin: 4rem 0 2rem;
+            border: 1px solid rgba(217, 178, 95, 0.25);
+            box-shadow: 0 25px 40px -20px #000, 0 0 30px -10px rgba(217, 178, 95, 0.1);
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .cta-section h2 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--text);
+            max-width: 600px;
+        }
+
+        .cta-section h2 i {
+            color: var(--gold);
+            margin-right: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(120deg, var(--gold-2), var(--gold));
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 100px;
+            color: #0a0d14;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 25px -10px rgba(217, 178, 95, 0.8);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -8px rgba(217, 178, 95, 1);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted-2);
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--muted);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            transition: 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 700px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .top-nav {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: flex-start;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 1.2rem;
+            }
+            .cta-section {
+                padding: 2rem;
+                flex-direction: column;
+                text-align: center;
+            }
+            .snapshot-grid {
+                grid-template-columns: 1fr 1fr;
+                padding: 1.2rem;
+            }
+            .strategy-detail, .benefit-section, .responsible-section {
+                padding: 1.8rem;
+            }
+            .hero-sub {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .snapshot-grid {
+                grid-template-columns: 1fr;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MOVING DARK BACKGROUND LAYERS -->
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <div class="noise" aria-hidden="true"></div>
+
+    <div class="container">
+        <!-- NAVIGATION -->
+        <div class="top-nav">
+            <div class="logo">
+                <i class="fas fa-globe-americas"></i> MACRO<span>HORIZON CO</span>
+            </div>
+            <div class="nav-links">
+                <a href="pages/strategy.html"><i class="fas fa-chart-line"></i> Strategy</a>
+                <a href="pages/research.html"><i class="fas fa-newspaper"></i> Research</a>
+                <a href="pages/market.html"><i class="fas fa-coins"></i> Markets</a>
+                <a href="pages/team.html"><i class="fas fa-user-tie"></i> Team</a>
+            </div>
+        </div>
+
+        <!-- HERO -->
+        <div class="hero">
+            <div class="badge">SECURE FINANCIAL FUTURE · INFORMED INVESTING</div>
+            <h1>Building a more secure<br>financial future through <span class="accent-glow">informed investing.</span></h1>
+            <p class="hero-sub">
+                At Macro Horizon Co, we believe that everyone deserves the opportunity to understand their financial options and make informed decisions about their future.
+            </p>
+            <div class="hero-quote">
+                “Whether you're planning for your family, saving for your children's education, preparing for retirement, or simply looking for ways to manage your money more effectively, understanding how investments work is an important first step.”
+            </div>
+        </div>
+
+        <!-- THREE CORE CARDS -->
+        <div class="grid-3">
+            <div class="card">
+                <i class="fas fa-chart-pie"></i>
+                <h3>Macro Analysis</h3>
+                <p>Interest rate trends, inflation dynamics, and central bank policies drive our core thesis.</p>
+                <ul>
+                    <li><i class="fas fa-circle"></i> Rate differentials & yield curves</li>
+                    <li><i class="fas fa-circle"></i> Global liquidity cycles</li>
+                    <li><i class="fas fa-circle"></i> Sovereign debt sustainability</li>
+                </ul>
+            </div>
+            <div class="card">
+                <i class="fas fa-globe"></i>
+                <h3>Geopolitical Edge</h3>
+                <p>Political changes, trade flows, and international relations create asymmetric opportunities.</p>
+                <ul>
+                    <li><i class="fas fa-circle"></i> Energy & commodity corridors</li>
+                    <li><i class="fas fa-circle"></i> Election & policy cycles</li>
+                    <li><i class="fas fa-circle"></i> Sanctions & trade agreements</li>
+                </ul>
+            </div>
+            <div class="card">
+                <i class="fas fa-currency-sign"></i>
+                <h3>Cross-Asset Execution</h3>
+                <p>From currency pairs to commodity futures — we express views with precision.</p>
+                <ul>
+                    <li><i class="fas fa-circle"></i> FX & rates strategies</li>
+                    <li><i class="fas fa-circle"></i> Energy & metals positioning</li>
+                    <li><i class="fas fa-circle"></i> Tail-risk hedging</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- DETAILED STRATEGY SECTION -->
+        <div class="strategy-detail">
+            <h2><i class="fas fa-sitemap"></i> The Global Macro Framework</h2>
+            <p style="color:var(--muted); max-width:900px; margin-bottom:1rem;">
+                Our process combines top-down economic forecasting with deep geopolitical intelligence. 
+                We identify dislocations across asset classes caused by policy shifts, trade imbalances, and systemic events.
+            </p>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <h4>Interest Rate & Policy</h4>
+                    <p>Tracking Fed, ECB, PBOC, and BoJ policy paths. We analyse real rates, forward guidance, and balance sheet trajectories to anticipate currency and bond moves.</p>
+                </div>
+                <div class="detail-item">
+                    <h4>Trade & Capital Flows</h4>
+                    <p>Current account balances, FDI trends, and supply chain realignments. We map capital movements to pinpoint structural FX and commodity opportunities.</p>
+                </div>
+                <div class="detail-item">
+                    <h4>Geopolitical Risk</h4>
+                    <p>From elections to conflicts — we quantify political risk premia and position in energy, defence, and safe-haven assets ahead of consensus.</p>
+                </div>
+                <div class="detail-item">
+                    <h4>Commodity Supercycles</h4>
+                    <p>Supply/demand imbalances, inventory levels, and weather patterns. We trade energy, metals, and agriculture based on macro-driven cycles.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW: INVESTMENT OPPORTUNITIES SECTION -->
+        <div class="opportunities-section">
+            <h2><i class="fas fa-layer-group"></i> What Investment Opportunities Can You Learn About?</h2>
+            <p class="subtitle">Our investment focus includes several categories:</p>
+            
+            <div class="opp-grid">
+                <div class="opp-card">
+                    <div class="opp-icon"><i class="fas fa-landmark"></i></div>
+                    <h3>1. US Large Cap Equity</h3>
+                    <p>Explore investments in established American companies and learn how diversified portfolios can provide exposure to different sectors of the US economy.</p>
+                </div>
+                <div class="opp-card">
+                    <div class="opp-icon"><i class="fas fa-apple-alt"></i></div>
+                    <h3>2. Apple and Tesla</h3>
+                    <p>Understand how investing in individual companies can offer growth opportunities, alongside risks associated with stock market fluctuations.</p>
+                </div>
+                <div class="opp-card">
+                    <div class="opp-icon"><i class="fas fa-globe-americas"></i></div>
+                    <h3>3. International Equity</h3>
+                    <p>Learn about investing in companies outside the United States to diversify exposure across international markets.</p>
+                </div>
+                <div class="opp-card">
+                    <div class="opp-icon"><i class="fas fa-money-bill-wave"></i></div>
+                    <h3>4. Cash & Equivalents</h3>
+                    <p>Discover how suitable cash investments can help maintain liquidity and provide access to money for short-term needs and emergencies.</p>
+                </div>
+                <div class="opp-card">
+                    <div class="opp-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <h3>5. Investment Grade Credit</h3>
+                    <p>Learn how certain government and corporate bonds may provide interest income and diversification.</p>
+                </div>
+                <div class="opp-card">
+                    <div class="opp-icon"><i class="fas fa-leaf"></i></div>
+                    <h3>6. Sustainable Infrastructure</h3>
+                    <p>Explore investment opportunities connected to essential infrastructure, including energy, utilities, and sustainable development.</p>
+                </div>
+                <div class="opp-card">
+                    <div class="opp-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                    <h3>7. Private Credit Fund IV</h3>
+                    <p>Understand how private credit funds lend to businesses, how they may generate income, and why liquidity, fees, and credit risks must be carefully evaluated before investing.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW: WHO CAN BENEFIT SECTION -->
+        <div class="benefit-section">
+            <h2><i class="fas fa-users"></i> Who Can Benefit?</h2>
+            <p style="color:var(--muted); margin-bottom:1.5rem;">Our educational approach is relevant to people at different stages of life, including:</p>
+            
+            <ul class="benefit-list">
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div><strong>Families and parents</strong> planning for education, housing, and retirement.</div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div><strong>Young adults</strong> learning to manage money and explore investment opportunities.</div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div><strong>Working professionals</strong> interested in developing long-term financial plans.</div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div><strong>LGBTQ+ and non-LGBTQ+ individuals</strong> seeking financial education and investment information without discrimination.</div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div><strong>People with disabilities</strong> who want to understand financial planning options while considering their living expenses and eligibility for government benefits.</div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div><strong>Retirees and individuals approaching retirement</strong> who want to understand income, liquidity, and investment risks.</div>
+                </li>
+            </ul>
+            <p style="color:var(--muted-2); font-size:0.9rem; margin-top:1.5rem; font-style:italic;">
+                Every person's financial circumstances are different. An investment that suits one person may not be appropriate for another.
+            </p>
+        </div>
+
+        <!-- NEW: RESPONSIBLE INVESTING SECTION -->
+        <div class="responsible-section">
+            <h2><i class="fas fa-shield-alt"></i> Our Approach to Responsible Investing</h2>
+            <p>We believe that trust begins with transparency.</p>
+            <p>Before committing money to any investment, individuals should understand what they are buying, how the investment works, what fees apply, how they can access their money, and what could cause them to lose money.</p>
+            
+            <div class="highlight-box">
+                <i class="fas fa-info-circle"></i>
+                <div>We do not believe in pressuring people to invest, promising guaranteed returns, or suggesting that anyone should risk money needed for essential expenses.</div>
+            </div>
+            
+            <p style="margin-top:1.5rem;">Our goal is to encourage informed financial decisions, responsible planning, and a better understanding of investment opportunities.</p>
+            
+            <h3 style="margin-top:2rem; color:var(--text); font-size:1.2rem; text-align:center;">Macro Horizon Co — Helping People Make Informed Decisions About Their Financial Future.</h3>
+            <p style="text-align:center; color:var(--muted-2); font-size:0.9rem; margin-top:0.5rem;">
+                Investment products involve different levels of risk, and losses are possible. Investment availability, eligibility, fees, and terms must be verified before investing.
+            </p>
+        </div>
+
+        <!-- MARKET SNAPSHOT / DATA DASHBOARD -->
+        <div class="market-snapshot">
+            <div class="snapshot-header">
+                <h3><i class="fas fa-wave-square"></i> Macro Dashboard · Live Signals</h3>
+                <span>Illustrative data · Q2 2026     </span>
+            </div>
+            <div class="snapshot-grid">
+                <div class="snapshot-item">
+                    <div class="label">US 10Y Yield</div>
+                    <div class="value">4.28%</div>
+                    <div class="change positive"><i class="fas fa-arrow-up"></i> +0.12</div>
+                </div>
+                <div class="snapshot-item">
+                    <div class="label">DXY Index</div>
+                    <div class="value">103.6</div>
+                    <div class="change negative"><i class="fas fa-arrow-down"></i> -0.32</div>
+                </div>
+                <div class="snapshot-item">
+                    <div class="label">Brent Crude</div>
+                    <div class="value">$87.4</div>
+                    <div class="change positive"><i class="fas fa-arrow-up"></i> +1.8%</div>
+                </div>
+                <div class="snapshot-item">
+                    <div class="label">Gold</div>
+                    <div class="value">$2,384</div>
+                    <div class="change positive"><i class="fas fa-arrow-up"></i> +0.6%</div>
+                </div>
+                <div class="snapshot-item">
+                    <div class="label">EUR/USD</div>
+                    <div class="value">1.092</div>
+                    <div class="change negative"><i class="fas fa-arrow-down"></i> -0.2%</div>
+                </div>
+                <div class="snapshot-item">
+                    <div class="label">VIX</div>
+                    <div class="value">14.2</div>
+                    <div class="change positive"><i class="fas fa-arrow-up"></i> +2.1%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA SECTION -->
+        <div class="cta-section">
+            <h2>
+                <i class="fas fa-chart-simple"></i> 
+                Position for the next macro regime shift.
+            </h2>
+            <a href="/pages/plan.html" class="btn">
+                <i class="fas fa-file-signature"></i> Request Strategy Deck
+            </a>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <div>© 2026 Macro Horizon Co · Global Macro Investment Strategy</div>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Disclosures</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // --- BACKGROUND CANVAS ANIMATION (Matches Dashboard) ---
+        (function background() {
+            var cv = document.getElementById('bg-canvas');
+            if (!cv) return;
+            var ctx = cv.getContext('2d', { alpha: false });
+            var DPR = Math.min(window.devicePixelRatio || 1, 2);
+            var W = 0, H = 0, particles = [];
+            
+            var blobs = [
+                { x: .16, y: .20, r: .60, c: '217,178,95', a: .08, sx: .00010, sy: .00013, ph: 0 },
+                { x: .85, y: .14, r: .55, c: '56,224,192', a: .06, sx: .00013, sy: .00009, ph: 1.7 },
+                { x: .70, y: .80, r: .68, c: '125,123,245', a: .06, sx: .00008, sy: .00011, ph: 3.1 },
+                { x: .22, y: .88, r: .50, c: '217,178,95', a: .05, sx: .00012, sy: .00007, ph: 4.6 },
+                { x: .50, y: .46, r: .78, c: '40,90,180', a: .06, sx: .00006, sy: .00010, ph: 5.9 }
+            ];
+
+            function resize() {
+                W = window.innerWidth; H = window.innerHeight;
+                cv.width = Math.floor(W * DPR); cv.height = Math.floor(H * DPR);
+                cv.style.width = W + 'px'; cv.style.height = H + 'px';
+                ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+                build();
+            }
+
+            function build() {
+                var n = Math.round((W * H) / 20000);
+                n = Math.max(24, Math.min(90, n));
+                particles = [];
+                for (var i = 0; i < n; i++) {
+                    particles.push({ 
+                        x: Math.random() * W, 
+                        y: Math.random() * H, 
+                        vx: (Math.random() - .5) * .2, 
+                        vy: (Math.random() - .5) * .2, 
+                        r: Math.random() * 1.4 + .4 
+                    });
+                }
+            }
+
+            function drawGrid(t) {
+                var step = 90, off = (t * .007) % step;
+                ctx.strokeStyle = 'rgba(125,155,205,0.03)'; 
+                ctx.lineWidth = 1; 
+                ctx.beginPath();
+                for (var x = -off; x < W + step; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, H); }
+                for (var y = -off; y < H + step; y += step) { ctx.moveTo(0, y); ctx.lineTo(W, y); }
+                ctx.stroke();
+            }
+
+            function drawBlobs(t) {
+                for (var i = 0; i < blobs.length; i++) {
+                    var b = blobs[i];
+                    var bx = (b.x + Math.sin(t * b.sx + b.ph) * .085) * W;
+                    var by = (b.y + Math.cos(t * b.sy + b.ph) * .10) * H;
+                    var br = b.r * Math.max(W, H) * .60;
+                    var g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+                    g.addColorStop(0, 'rgba(' + b.c + ',' + b.a + ')');
+                    g.addColorStop(.55, 'rgba(' + b.c + ',' + (b.a * .3) + ')');
+                    g.addColorStop(1, 'rgba(' + b.c + ',0)');
+                    ctx.fillStyle = g; 
+                    ctx.beginPath(); 
+                    ctx.arc(bx, by, br, 0, 6.2832); 
+                    ctx.fill();
+                }
+            }
+
+            function drawWaves(t) {
+                var baseY = H - 80;
+                var cols = ['rgba(217,178,95,0.05)', 'rgba(56,224,192,0.04)', 'rgba(125,123,245,0.03)'];
+                for (var k = 0; k < 3; k++) {
+                    ctx.beginPath();
+                    for (var x = 0; x <= W + 10; x += 14) {
+                        var y = baseY - k * 32 + Math.sin(x * .0055 + t * .0005 + k * 1.4) * 22 + Math.sin(x * .0125 - t * .0008 + k) * 9;
+                        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                    }
+                    ctx.strokeStyle = cols[k]; 
+                    ctx.lineWidth = 1.2; 
+                    ctx.stroke();
+                }
+            }
+
+            function drawParticles(t) {
+                var i, j, p, q, dx, dy, d2, d, LD = 130, LD2 = LD * LD;
+                for (i = 0; i < particles.length; i++) {
+                    p = particles[i]; p.x += p.vx; p.y += p.vy;
+                    if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
+                    if (p.y < -20) p.y = H + 20; if (p.y > H + 20) p.y = -20;
+                }
+                for (i = 0; i < particles.length; i++) {
+                    p = particles[i];
+                    for (j = i + 1; j < particles.length; j++) {
+                        q = particles[j]; dx = p.x - q.x; dy = p.y - q.y; d2 = dx * dx + dy * dy;
+                        if (d2 < LD2) {
+                            d = Math.sqrt(d2);
+                            ctx.strokeStyle = 'rgba(150,185,240,' + ((1 - d / LD) * .08) + ')';
+                            ctx.lineWidth = .7; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+                        }
+                    }
+                }
+                for (i = 0; i < particles.length; i++) {
+                    p = particles[i];
+                    var glow = .20 + Math.sin(t * .0012 + i) * .10;
+                    ctx.fillStyle = 'rgba(210,228,255,' + glow + ')';
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
+                }
+            }
+
+            function frame(now) {
+                ctx.fillStyle = '#05080f'; ctx.fillRect(0, 0, W, H);
+                drawGrid(now); 
+                ctx.globalCompositeOperation = 'lighter';
+                drawBlobs(now); drawWaves(now); drawParticles(now);
+                ctx.globalCompositeOperation = 'source-over';
+                requestAnimationFrame(frame);
+            }
+
+            resize();
+            window.addEventListener('resize', function () {
+                clearTimeout(window.__bgT); 
+                window.__bgT = setTimeout(resize, 180);
+            });
+            requestAnimationFrame(frame);
+        })();
+    </script>
+</body>
+</html>

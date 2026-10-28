@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research & Eligibility · Macro Horizon Co</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #05080f; --border: rgba(255, 255, 255, 0.09); --text: #e9eefb;
+            --muted: #8b9bb4; --gold: #d9b25f; --gold-2: #f3dda3; --teal: #38e0c0;
+            --blue: #4aa8ff; --violet: #7d7bf5; --up: #3ddc97; --down: #ff6b7a;
+            --radius: 18px; --max: 1100px;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4 { font-family: 'Sora', sans-serif; letter-spacing: -0.02em; }
+        
+        #bg-canvas { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+        .noise { position: fixed; inset: 0; z-index: -1; opacity: .026; mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        
+        .container { max-width: var(--max); margin: 0 auto; padding: 2rem 2rem 4rem; position: relative; z-index: 10; }
+        
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 3rem; flex-wrap: wrap; }
+        .logo { font-family: 'Sora', sans-serif; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: var(--gold); }
+        .logo span { font-weight: 300; color: var(--muted); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+        h1 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1rem; line-height: 1.1; }
+        .accent-glow { color: var(--teal); text-shadow: 0 0 20px rgba(56, 224, 192, 0.4); font-weight: 400; }
+        .intro-text { font-size: 1.15rem; color: var(--muted); max-width: 800px; margin-bottom: 3rem; border-left: 3px solid var(--teal); padding-left: 1.5rem; }
+
+        /* --- ELIGIBILITY FORM --- */
+        .eligibility-section {
+            background: linear-gradient(160deg, rgba(56,224,192,.05), rgba(5,8,15,.8));
+            border: 1px solid rgba(56, 224, 192, 0.3);
+            border-radius: var(--radius);
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.8);
+        }
+        .eligibility-section h2 { font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--text); display: flex; align-items: center; gap: 12px; }
+        .eligibility-section h2 i { color: var(--teal); }
+        .eligibility-section > p { color: var(--muted); margin-bottom: 2rem; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 0.85rem; font-weight: 600; color: var(--gold-2); text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 14px 16px; border-radius: 12px;
+            background: rgba(5, 8, 15, 0.8); border: 1px solid var(--border);
+            color: var(--text); font-family: 'Inter', sans-serif; font-size: 1rem;
+            outline: none; transition: 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(56, 224, 192, 0.1); }
+        
+        .btn-check {
+            background: linear-gradient(120deg, var(--teal), #2ab89c);
+            border: none; padding: 1rem 2.5rem; border-radius: 100px;
+            color: #0a0d14; font-weight: 700; font-size: 1rem; cursor: pointer;
+            transition: 0.3s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .btn-check:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -8px rgba(56, 224, 192, 0.6); }
+
+        .result-box {
+            display: none; margin-top: 2rem; padding: 1.5rem; border-radius: 12px;
+            font-weight: 500; line-height: 1.5; animation: fadeIn 0.5s ease;
+        }
+        .result-box.eligible { background: rgba(61, 220, 151, 0.1); border: 1px solid rgba(61, 220, 151, 0.4); color: var(--up); }
+        .result-box.ineligible { background: rgba(255, 107, 122, 0.1); border: 1px solid rgba(255, 107, 122, 0.4); color: var(--down); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+        /* --- APPLICATION LINK SECTION --- */
+        .application-link-section {
+            background: linear-gradient(160deg, rgba(217,178,95,.08), rgba(5,8,15,.8));
+            border: 1px solid rgba(217, 178, 95, 0.3);
+            border-radius: var(--radius);
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .application-link-section h2 { font-size: 1.8rem; margin-bottom: 1rem; color: var(--gold-2); }
+        .application-link-section p { color: var(--muted); max-width: 700px; margin: 0 auto 2rem; font-size: 1.05rem; }
+        
+        .link-box {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(5, 8, 15, 0.8); border: 1px dashed var(--gold);
+            padding: 1rem 1.5rem; border-radius: 12px; max-width: 600px; margin: 0 auto;
+            flex-wrap: wrap; gap: 1rem;
+        }
+        .link-text { font-family: monospace; color: var(--gold-2); font-size: 1.1rem; font-weight: 600; letter-spacing: 0.05em; }
+        .btn-copy {
+            background: rgba(217, 178, 95, 0.15); border: 1px solid var(--gold);
+            color: var(--gold-2); padding: 8px 16px; border-radius: 8px;
+            cursor: pointer; font-weight: 600; transition: 0.2s;
+        }
+        .btn-copy:hover { background: var(--gold); color: #0a0d14; }
+
+        /* --- RESEARCH CARDS --- */
+        .research-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
+        .research-card {
+            background: linear-gradient(160deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+            border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem;
+            transition: 0.3s;
+        }
+        .research-card:hover { border-color: rgba(74, 168, 255, 0.4); transform: translateY(-3px); }
+        .research-tag { display: inline-block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; background: rgba(74, 168, 255, 0.1); color: var(--blue); border: 1px solid rgba(74, 168, 255, 0.2); margin-bottom: 1rem; }
+        .research-card h3 { font-size: 1.3rem; margin-bottom: 0.8rem; }
+        .research-card p { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .research-meta { display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 1rem; font-size: 0.8rem; color: var(--muted); }
+
+        .detail-section { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius); padding: 3rem; margin-bottom: 3rem; }
+        .detail-section h2 { font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--text); display: flex; gap: 12px; align-items: center; }
+        .detail-section h2 i { color: var(--gold); }
+        .detail-list { list-style: none; }
+        .detail-list li { margin-bottom: 1.5rem; padding-left: 2rem; position: relative; }
+        .detail-list li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--teal); position: absolute; left: 0; top: 4px; }
+        .detail-list h4 { font-size: 1.1rem; margin-bottom: 0.3rem; color: var(--gold-2); }
+        .detail-list p { color: var(--muted); font-size: 0.95rem; }
+
+        @media (max-width: 768px) {
+            .research-grid, .form-grid { grid-template-columns: 1fr; }
+            .top-nav { flex-direction: column; gap: 1rem; align-items: flex-start; }
+            .detail-section, .eligibility-section, .application-link-section { padding: 1.5rem; }
+            .link-box { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="noise"></div>
+
+    <div class="container">
+        <div class="top-nav">
+            <div class="logo"><i class="fas fa-globe-americas"></i> MACRO<span>HORIZON CO</span></div>
+            <div class="nav-links">
+                <a href="strategy.html">Strategy</a>
+                <a href="#" class="active">Research</a>
+                <a href="markets.html">Markets</a>
+                <a href="team.html">Team</a>
+                <a href="eligibility.html" style="color:var(--teal); font-weight:700;">Apply Now</a>
+            </div>
+        </div>
+
+        <h1>Research & <span class="accent-glow">Eligibility</span></h1>
+        <p class="intro-text">
+            We believe that an informed investor is a successful investor. Check your eligibility below, review your financial profile, and access the secure application link provided by our support team.
+        </p>
+
+        <!-- ELIGIBILITY CHECKER -->
+        <div class="eligibility-section">
+            <h2><i class="fas fa-clipboard-check"></i> Check Your Preliminary Eligibility</h2>
+            <p>Please enter your details below to see if you meet our initial criteria. <strong>Note:</strong> A minimum credit score of 450 is required for this program.</p>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="childrenCount">Number of Children</label>
+                    <input type="number" id="childrenCount" placeholder="Enter number of children" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="income">Annual Household Income ($)</label>
+                    <input type="number" id="income" placeholder="Enter annual income" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="creditScore">Current Credit Score (FICO)</label>
+                    <input type="number" id="creditScore" placeholder="Enter credit score (300-850)" min="300" max="850">
+                </div>
+                <div class="form-group">
+                    <label for="employment">Employment Status</label>
+                    <select id="employment">
+                        <option value="employed">Employed (Full-Time)</option>
+                        <option value="self-employed">Self-Employed</option>
+                        <option value="retired">Retired</option>
+                        <option value="unemployed">Unemployed</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-check" onclick="checkEligibility()">
+                <i class="fas fa-search"></i> Run Eligibility Check
+            </button>
+
+            <!-- Result Box -->
+            <div id="resultBox" class="result-box"></div>
+        </div>
+
+        <!-- APPLICATION LINK SECTION -->
+        <div class="application-link-section">
+            <h2><i class="fas fa-link"></i> Submit Your Official Application</h2>
+            <p>If you meet the preliminary criteria, your next step is to complete the official background check and verification. This must be done through the secure link provided by our Support Team.</p>
+            
+            <div class="link-box">
+                <span class="link-text" id="appLinkText">MH-SECURE-APPLY/450+</span>
+                <button class="btn-copy" onclick="copyLink()">
+                    <i class="fas fa-copy"></i> Copy Link
+                </button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--muted-2); margin-top: 1rem;">
+                *For security reasons, this link is unique to your session. Do not share it with anyone. You will be prompted to upload proof of income and undergo a soft credit pull.
+            </p>
+        </div>
+
+        <!-- RESEARCH CARDS -->
+        <div class="research-grid">
+            <div class="research-card">
+                <span class="research-tag">Macro Outlook</span>
+                <h3>The End of the Zero-Rate Era: Navigating Higher Term Premiums</h3>
+                <p>An in-depth analysis of the shifting global interest rate landscape, focusing on the repricing of long-duration sovereign debt and the implications for equity multiples across developed markets.</p>
+                <div class="research-meta"><span><i class="fas fa-user"></i> Dr. Elena Rostova</span><span><i class="fas fa-clock"></i> 12 min read</span></div>
+            </div>
+            <div class="research-card">
+                <span class="research-tag">Geopolitics</span>
+                <h3>Supply Chain Fragmentation: The New Geography of Trade</h3>
+                <p>How the realignment of global supply chains away from single-source dependencies is creating structural inflationary pressures and new opportunities in domestic infrastructure.</p>
+                <div class="research-meta"><span><i class="fas fa-user"></i> Marcus Thorne</span><span><i class="fas fa-clock"></i> 8 min read</span></div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h2><i class="fas fa-book-open"></i> Investment Opportunities Explained</h2>
+            <ul class="detail-list">
+                <li>
+                    <h4>1. US Large Cap Equity</h4>
+                    <p>Large-cap equities represent established, financially stable American companies. Investing in this sector provides exposure to the core of the US economy.</p>
+                </li>
+                <li>
+                    <h4>2. Apple and Tesla (Individual Stocks)</h4>
+                    <p>Investing in specific companies like Apple or Tesla offers the potential for high growth, but comes with idiosyncratic risk. A single company's earnings report can cause significant stock price fluctuation.</p>
+                </li>
+                <li>
+                    <h4>3. International Equity</h4>
+                    <p>Diversifying outside the US protects against domestic economic downturns. International equities carry additional risks such as currency fluctuation and geopolitical instability.</p>
+                </li>
+                <li>
+                    <h4>4. Cash & Equivalents</h4>
+                    <p>Cash and cash equivalents are crucial for liquidity. They provide a safety net for emergencies and short-term goals.</p>
+                </li>
+                <li>
+                    <h4>5. Investment Grade Credit</h4>
+                    <p>These are bonds issued by highly rated corporations or governments. They provide regular interest income and are generally lower risk than stocks.</p>
+                </li>
+                <li>
+                    <h4>6. Sustainable Infrastructure</h4>
+                    <p>Investing in infrastructure offers inflation-linked cash flows. The shift towards sustainable development creates long-term growth potential.</p>
+                </li>
+                <li>
+                    <h4>7. Private Credit Fund IV</h4>
+                    <p>Private credit involves lending directly to middle-market businesses. It can offer high yields but comes with significant liquidity risk and credit risk.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // --- ELIGIBILITY LOGIC ---
+        function checkEligibility() {
+            var children = parseInt(document.getElementById('childrenCount').value);
+            var income = parseFloat(document.getElementById('income').value);
+            var score = parseInt(document.getElementById('creditScore').value);
+            var employment = document.getElementById('employment').value;
+            
+            var resultBox = document.getElementById('resultBox');
+            resultBox.className = 'result-box'; // Reset classes
+            resultBox.style.display = 'block';
+
+            // Validation for empty fields
+            if (isNaN(children) || children < 0) {
+                resultBox.classList.add('ineligible');
+                resultBox.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please enter a valid number of children (0 or more).';
+                return;
+            }
+
+            if (isNaN(income) || income <= 0) {
+                resultBox.classList.add('ineligible');
+                resultBox.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please enter a valid annual household income.';
+                return;
+            }
+
+            if (isNaN(score) || score < 300 || score > 850) {
+                resultBox.classList.add('ineligible');
+                resultBox.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please enter a valid credit score between 300 and 850.';
+                return;
+            }
+
+            // Core Rule: Minimum Credit Score of 450
+            if (score < 450) {
+                resultBox.classList.add('ineligible');
+                resultBox.innerHTML = `
+                    <div style="display:flex; gap:10px; align-items:flex-start;">
+                        <i class="fas fa-times-circle" style="font-size:1.2rem; margin-top:2px;"></i>
+                        <div>
+                            <strong>Not Eligible for Priority Application:</strong> Your credit score of <strong>${score}</strong> is below the required threshold of <strong>450</strong>. 
+                            <br><br>
+                            <span style="font-size:0.9rem; opacity:0.8;">You can still learn about our investment opportunities, but you cannot proceed to the secure application link at this time.</span>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // If Score is >= 450
+            resultBox.classList.add('eligible');
+            
+            // Calculate a mock "preliminary score" for visual feedback
+            var baseScore = score;
+            var incomeBonus = income > 50000 ? 10 : 0;
+            var childrenBonus = children > 0 ? 5 : 0;
+            var finalScore = Math.min(850, baseScore + incomeBonus + childrenBonus);
+
+            resultBox.innerHTML = `
+                <div style="display:flex; gap:10px; align-items:flex-start;">
+                    <i class="fas fa-check-circle" style="font-size:1.2rem; margin-top:2px;"></i>
+                    <div>
+                        <strong>Congratulations! You are Preliminarily Eligible.</strong><br>
+                        Based on your profile (${children} children, ${employment}, score: ${finalScore}), you meet the initial criteria for our priority program.
+                        <br><br>
+                        <span style="font-size:0.9rem; opacity:0.9;">Please use the secure application link below to complete your background check and final verification.</span>
+                    </div>
+                </div>
+            `;
+            
+            // Scroll to the link
+            setTimeout(function() {
+                document.querySelector('.application-link-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 500);
+        }
+
+        // --- COPY LINK LOGIC ---
+        function copyLink() {
+            var linkText = document.getElementById('appLinkText').innerText;
+            navigator.clipboard.writeText("https://apply.macrohorizonco.com/" + linkText).then(function() {
+                var btn = document.querySelector('.btn-copy');
+                var originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                btn.style.background = 'var(--teal)';
+                btn.style.color = '#0a0d14';
+                
+                setTimeout(function() {
+                    btn.innerHTML = originalText;
+                    btn.style.background = 'rgba(217, 178, 95, 0.15)';
+                    btn.style.color = 'var(--gold-2)';
+                }, 2000);
+            }).catch(function(err) {
+                alert("Failed to copy link. Please select the text manually.");
+            });
+        }
+
+        // --- BACKGROUND CANVAS ANIMATION ---
+        (function() {
+            var cv = document.getElementById('bg-canvas');
+            var ctx = cv.getContext('2d', { alpha: false });
+            var W, H, particles = [];
+            var blobs = [
+                { x: .85, y: .15, r: .6, c: '56,224,192', a: .08, sx: .0001, sy: .00013, ph: 0 },
+                { x: .2, y: .8, r: .5, c: '74,168,255', a: .05, sx: .00012, sy: .00008, ph: 1.7 }
+            ];
+            function resize() {
+                W = window.innerWidth; H = window.innerHeight;
+                cv.width = W; cv.height = H;
+                particles = Array.from({length: 40}, () => ({
+                    x: Math.random() * W, y: Math.random() * H, vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3, r: Math.random()*1.5
+                }));
+            }
+            function draw(t) {
+                ctx.fillStyle = '#05080f'; ctx.fillRect(0, 0, W, H);
+                ctx.globalCompositeOperation = 'lighter';
+                blobs.forEach(b => {
+                    var bx = (b.x + Math.sin(t * b.sx) * .05) * W, by = (b.y + Math.cos(t * b.sy) * .05) * H;
+                    var br = b.r * Math.max(W,H) * .6;
+                    var g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+                    g.addColorStop(0, `rgba(${b.c},${b.a})`); g.addColorStop(1, `rgba(${b.c},0)`);
+                    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(bx, by, br, 0, 6.28); ctx.fill();
+                });
+                particles.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+                    ctx.fillStyle = 'rgba(210,228,255,0.3)'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.28); ctx.fill();
+                });
+                ctx.globalCompositeOperation = 'source-over';
+                requestAnimationFrame(draw);
+            }
+            resize(); window.addEventListener('resize', resize); requestAnimationFrame(draw);
+        })();
+    </script>
+</body>
+</html>
